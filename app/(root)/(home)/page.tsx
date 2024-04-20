@@ -1,7 +1,9 @@
 import React from "react";
 
-const Home = () => {
-  return <div>Home</div>;
-};
-
-export default Home;
+export default function Home() {
+  return (
+    <main>
+      <h1 className="h1-bold">Next 14!!!</h1>
+    </main>
+  );
+}
