@@ -11,24 +11,44 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // theme provider
 const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [mode, setMode] = useState<string>("light");
+  const [mode, setMode] = useState<string>("system");
 
   const handleThemeChange = () => {
+    if (
+      mode === "system" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      setDarkMode();
+    } else {
+      setLightMode();
+    }
+
     if (mode === "dark") {
-      setMode("light");
-      document.documentElement.classList.remove("dark"); // remove the previous class
-      document.documentElement.classList.add("light");
+      setDarkMode();
     } else if (mode === "light") {
-      setMode("dark");
-      document.documentElement.classList.remove("light"); // remove the previous class
-      document.documentElement.classList.add("dark");
+      setLightMode();
     }
   };
 
+  function setDarkMode() {
+    setMode("dark");
+    document.documentElement.classList.add("dark");
+
+    localStorage.setItem("theme", "dark");
+  }
+
+  function setLightMode() {
+    setMode("light");
+    document.documentElement.classList.remove("dark");
+
+    localStorage.theme = "light";
+  }
+
   // useEffect for detecting changes
-  // useEffect(() => {
-  //
-  // }, []);
+  useEffect(() => {
+    handleThemeChange();
+  }, [mode]);
 
   return (
     <ThemeContext.Provider value={{ mode, setMode }}>
