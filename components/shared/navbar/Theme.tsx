@@ -46,7 +46,7 @@ const Theme: FunctionComponent<Props> = (props) => {
               onClick={() => setMode(item.value)}
               checked={item.value === mode}
               className={
-                "cursor-pointer hover:opacity-80 dark:focus:bg-dark-400"
+                "cursor-pointer hover:opacity-80 dark:focus:bg-dark-400 text-dark100_light900"
               }
             >
               {item.label}
