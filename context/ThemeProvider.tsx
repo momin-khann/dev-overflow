@@ -11,7 +11,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // theme provider
 const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [mode, setMode] = useState<string>("system");
+  const [mode, setMode] = useState<string>("dark");
 
   const handleThemeChange = () => {
     if (
