@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { formatNumber } from "@/helpers/timeAndNumberFormats";
 
 interface OwnProps {
   imgUrl: string;
@@ -34,7 +35,7 @@ const Metric: FunctionComponent<Props> = ({
       />
 
       <p className={`${textStyles} flex items-center gap-1`}>
-        {value}
+        {formatNumber(Number(value))}
 
         <span
           className={`small-regular line-clamp-1 ${isAuthor ? "max-sm:hidden" : ""}`}
