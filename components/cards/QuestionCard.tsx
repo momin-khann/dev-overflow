@@ -68,7 +68,7 @@ const QuestionCard: FunctionComponent<Props> = ({
         <Metric
           imgUrl="/assets/icons/like.svg"
           alt="Upvotes"
-          value={upvotes}
+          value={Number(upvotes)}
           title=" Votes"
           textStyles="small-medium text-dark400_light800"
         />
