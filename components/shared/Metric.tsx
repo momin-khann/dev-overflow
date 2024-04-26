@@ -35,7 +35,7 @@ const Metric: FunctionComponent<Props> = ({
       />
 
       <p className={`${textStyles} flex items-center gap-1`}>
-        {formatNumber(Number(value))}
+        {typeof value === "number" ? formatNumber(value) : value}
 
         <span
           className={`small-regular line-clamp-1 ${isAuthor ? "max-sm:hidden" : ""}`}
