@@ -20,6 +20,7 @@ import { questionSchema } from "@/schemas/questionSchema";
 import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import { createQuestion } from "@/lib/actions/question.action";
 
 let type: string = "create";
 
@@ -30,13 +31,6 @@ type Props = OwnProps;
 const Question: FunctionComponent<Props> = (props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef(null);
-
-  const log = () => {
-    if (editorRef.current) {
-      // @ts-ignore
-      console.log(editorRef.current.getContent());
-    }
-  };
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof questionSchema>>({
@@ -57,6 +51,8 @@ const Question: FunctionComponent<Props> = (props) => {
     try {
       // make an async call to your API
       // containing all form data
+      await createQuestion({});
+
       // pop-up with sweet alert and then navigate to home page.
     } catch (error) {
       console.error("Error submitting Question. " + error);
