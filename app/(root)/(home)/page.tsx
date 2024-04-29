@@ -1,7 +1,3 @@
-"use client";
-
-import React from "react";
-import { useTheme } from "@/context/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import LocalSearch from "@/components/shared/search/LocalSearch";
@@ -11,9 +7,10 @@ import HomeFilters from "@/components/home/HomeFilters";
 import NoResult from "@/components/shared/NoResult";
 import QuestionCard from "@/components/cards/QuestionCard";
 import { questions } from "@/data/questions";
+import { getQuestions } from "@/lib/actions/question.action";
 
-export default function Home() {
-  const { mode } = useTheme();
+export default async function Home() {
+  const questions = await getQuestions();
 
   return (
     <main>
@@ -52,7 +49,7 @@ export default function Home() {
             _id={question._id}
             title={question.title}
             tags={question.tags}
-            author={question.author}
+            author={question?.author}
             upvotes={question.upvotes}
             views={question.views}
             answers={question.answers}

@@ -1,6 +1,6 @@
 import { Schema, model, models, Document } from "mongoose";
 
-interface Question extends Document {
+export interface Question extends Document {
   title: string;
   description: string;
   views: number;
@@ -8,7 +8,7 @@ interface Question extends Document {
   downvotes: Schema.Types.ObjectId;
   tags: Schema.Types.ObjectId[];
   answers: Schema.Types.ObjectId[];
-  author: Schema.Types.ObjectId;
+  author?: Schema.Types.ObjectId;
   createdAt: Date;
 }
 
@@ -49,5 +49,5 @@ const questionSchema = new Schema<Question>(
   { timestamps: true },
 );
 
-export const Questions =
+export const QuestionModel =
   models.questions || model<Question>("questions", questionSchema);

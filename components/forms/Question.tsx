@@ -10,7 +10,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ControllerRenderProps, FieldValues, useForm } from "react-hook-form";
+import { ControllerRenderProps, useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Editor } from "@tinymce/tinymce-react";
@@ -21,6 +21,7 @@ import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.action";
+import toast from "react-hot-toast";
 
 let type: string = "create";
 
@@ -37,7 +38,7 @@ const Question: FunctionComponent<Props> = (props) => {
     resolver: zodResolver(questionSchema),
     defaultValues: {
       title: "",
-      explanation: "",
+      description: "",
       tags: [],
     },
   });
@@ -46,15 +47,23 @@ const Question: FunctionComponent<Props> = (props) => {
   async function onSubmit(formData: z.infer<typeof questionSchema>) {
     setIsSubmitting(true);
 
-    console.log(formData);
-
     try {
       // make an async call to your API
       // containing all form data
-      await createQuestion({});
-
+      await createQuestion({
+        title: formData.title,
+        description: formData.description,
+        // author: "",
+        tags: formData.tags,
+        path: "/",
+      });
       // pop-up with sweet alert and then navigate to home page.
+
+      toast.success("Question created successfully.");
+
+      form.reset();
     } catch (error) {
+      toast.error("Error submitting Question");
       console.error("Error submitting Question. " + error);
     } finally {
       setIsSubmitting(false);
@@ -154,7 +163,7 @@ const Question: FunctionComponent<Props> = (props) => {
             {/*Explanation Field*/}
             <FormField
               control={form.control}
-              name={"explanation"}
+              name={"description"}
               render={({ field }) => (
                 <FormItem className={"flex w-full flex-col gap-3"}>
                   <FormLabel
@@ -170,11 +179,10 @@ const Question: FunctionComponent<Props> = (props) => {
                         // @ts-ignore
                         editorRef.current = editor;
                       }}
-                      initialValue=""
+                      // initialValue=""
                       init={richTextEditor.init}
                       onBlur={field.onBlur}
-                      // onEditorChange={(content) => field.onChange(content)}
-                      onChange={(content) => field.onChange(content)}
+                      onEditorChange={(content) => field.onChange(content)}
                     />
                   </FormControl>
                   <FormDescription

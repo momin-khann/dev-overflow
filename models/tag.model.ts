@@ -1,6 +1,6 @@
 import { Schema, model, models, Document } from "mongoose";
 
-interface Tag extends Document {
+export interface Tag extends Document {
   name: string;
   description?: string;
   questions: Schema.Types.ObjectId[];
@@ -36,4 +36,4 @@ const tagSchema = new Schema({
   },
 });
 
-export const Tags = models.tags || model("tags", tagSchema);
+export const TagModel = models.tags || model("tags", tagSchema);
