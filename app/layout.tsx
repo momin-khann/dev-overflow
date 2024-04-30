@@ -4,6 +4,7 @@ import "./globals.css";
 import { Inter, Space_Grotesk } from "next/font/google";
 import ThemeProvider from "@/context/ThemeProvider";
 import { Toaster } from "react-hot-toast";
+import React from "react";
 
 const inter = Inter({
   subsets: ["latin"],

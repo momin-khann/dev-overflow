@@ -28,8 +28,6 @@ const createQuestion = asyncHandler(async (params: CreateQuestionParams) => {
     // author,
   });
 
-  await question.save();
-
   if (!question) throw new Error("error creating question.");
 
   const tagDocuments = [];

@@ -4,11 +4,7 @@ import React, { FunctionComponent } from "react";
 import { homePageFilters } from "@/data/filters";
 import { Button } from "@/components/ui/button";
 
-interface OwnProps {}
-
-type Props = OwnProps;
-
-const HomeFilters: FunctionComponent<Props> = (props) => {
+const HomeFilters: FunctionComponent = () => {
   const active = "frequent";
 
   return (

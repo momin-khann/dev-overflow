@@ -5,6 +5,7 @@ import React from "react";
 import Theme from "./Theme";
 import MobileNav from "@/components/shared/navbar/MobileNav";
 import GlobalSearch from "@/components/shared/search/GlobalSearch";
+import { Button } from "@/components/ui/button";
 // import MobileNav from "./MobileNav";
 // import GlobalSearch from '../search/GlobalSearch'
 
@@ -25,9 +26,16 @@ const Navbar = () => {
       <GlobalSearch />
       <div className="flex-between gap-5">
         <Theme />
+
+        {/*<Link href="/sign-in" className="flex justify-end max-sm:w-full">*/}
+        {/*  <Button className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900">*/}
+        {/*    Sign In*/}
+        {/*  </Button>*/}
+        {/*</Link>*/}
+
         <SignedIn>
           <UserButton
-            afterSignOutUrl="/"
+            afterSignOutUrl={"/"}
             appearance={{
               elements: {
                 avatarBox: "h-10 w-10",

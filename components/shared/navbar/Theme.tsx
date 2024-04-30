@@ -11,11 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { themes } from "@/constants";
 
-interface OwnProps {}
-
-type Props = OwnProps;
-
-const Theme: FunctionComponent<Props> = (props) => {
+const Theme: FunctionComponent = () => {
   const { mode, setMode } = useTheme();
   return (
     <div>

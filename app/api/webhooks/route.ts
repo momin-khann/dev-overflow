@@ -1,7 +1,7 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { UserModel } from "@/models/user.model";
+import { createUser, deleteUser, updateUser } from "@/lib/actions/user.action";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
@@ -49,11 +49,8 @@ export async function POST(req: Request) {
     });
   }
 
-  // Get the ID and type
-  const { id } = evt.data;
+  // Getting the event-type
   const eventType = evt.type;
-
-  console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
 
   // if event === "user.created"
   // create a new user in database
@@ -61,14 +58,13 @@ export async function POST(req: Request) {
     const { id, email_addresses, image_url, username, first_name, last_name } =
       evt.data;
 
-    const mongoUser = await UserModel.create({
+    const mongoUser = await createUser({
       clerk_id: id,
+      name: `${first_name} ${last_name}`,
       email: email_addresses[0].email_address,
       username: username,
       picture: image_url,
     });
-
-    await mongoUser.save();
 
     return Response.json(
       { success: true, message: "user created successfully.", data: mongoUser },
@@ -80,9 +76,35 @@ export async function POST(req: Request) {
   if (eventType === "user.updated") {
     const { id, email_addresses, image_url, username, first_name, last_name } =
       evt.data;
+
+    const mongoUser = await updateUser({
+      clerkId: id,
+      updateData: {
+        name: `${first_name} ${last_name}`,
+        email: email_addresses[0].email_address,
+        username: username,
+        picture: image_url,
+      },
+      path: `/profile/${id}`,
+    });
+
+    return Response.json(
+      { success: true, message: "user updated successfully.", data: mongoUser },
+      { status: 200 },
+    );
   }
 
   // if event === "user.deleted"
+  if (eventType === "user.deleted") {
+    const { id } = evt.data;
+
+    const mongoUser = await deleteUser(id);
+
+    return Response.json(
+      { success: true, message: "user deleted successfully.", data: mongoUser },
+      { status: 200 },
+    );
+  }
 
   return new Response("", { status: 200 });
 }

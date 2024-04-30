@@ -6,11 +6,12 @@ import { homePageFilters } from "@/data/filters";
 import HomeFilters from "@/components/home/HomeFilters";
 import NoResult from "@/components/shared/NoResult";
 import QuestionCard from "@/components/cards/QuestionCard";
-import { questions } from "@/data/questions";
+// import { questions } from "@/data/questions";
 import { getQuestions } from "@/lib/actions/question.action";
+import { Question } from "@/types";
 
 export default async function Home() {
-  const questions = await getQuestions();
+  const questions: Array<Question> = await getQuestions();
 
   return (
     <main>
@@ -43,7 +44,7 @@ export default async function Home() {
       <HomeFilters />
 
       {questions.length > 0 ? (
-        questions.map((question) => (
+        questions.map((question: Question) => (
           <QuestionCard
             key={question._id}
             _id={question._id}
