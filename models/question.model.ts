@@ -1,6 +1,6 @@
 import { Schema, model, models, Document } from "mongoose";
 
-export interface Question extends Document {
+export interface IQuestion extends Document {
   title: string;
   description: string;
   views: number;
@@ -8,11 +8,11 @@ export interface Question extends Document {
   downvotes: Schema.Types.ObjectId;
   tags: Schema.Types.ObjectId[];
   answers: Schema.Types.ObjectId[];
-  author?: Schema.Types.ObjectId;
+  author: Schema.Types.ObjectId;
   createdAt: Date;
 }
 
-const questionSchema = new Schema<Question>(
+const questionSchema = new Schema<IQuestion>(
   {
     title: {
       type: String,
@@ -50,4 +50,4 @@ const questionSchema = new Schema<Question>(
 );
 
 export const QuestionModel =
-  models.questions || model<Question>("questions", questionSchema);
+  models.questions || model<IQuestion>("questions", questionSchema);

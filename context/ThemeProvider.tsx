@@ -14,28 +14,32 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [mode, setMode] = useState<string>("dark");
 
   const handleThemeChange = () => {
-    if (
-      mode === "system" ||
-      (!("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      setDarkMode();
-    } else {
-      setLightMode();
-    }
+    //   if (
+    //     mode === "system" ||
+    //     (!("theme" in localStorage) &&
+    //       window.matchMedia("(prefers-color-scheme: dark)").matches)
+    //   ) {
+    //     setDarkMode();
+    //   } else {
+    //     setLightMode();
+    //   }
+    //
+    //   if (mode === "dark") {
+    //     setDarkMode();
+    //   } else if (mode === "light") {
+    //     setLightMode();
+    //   }
+    // };
 
-    if (mode === "dark") {
-      setDarkMode();
-    } else if (mode === "light") {
-      setLightMode();
-    }
+    if (mode === "dark") setDarkMode();
+    else setLightMode();
   };
 
   function setDarkMode() {
     setMode("dark");
     document.documentElement.classList.add("dark");
 
-    localStorage.setItem("theme", "dark");
+    localStorage.theme = "dark";
   }
 
   function setLightMode() {

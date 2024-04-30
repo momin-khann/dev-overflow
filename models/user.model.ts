@@ -1,21 +1,21 @@
 import { Schema, model, models, Document } from "mongoose";
 
-interface User extends Document {
+export interface IUser extends Document {
   clerkId: string;
   name: string;
   username: string;
   email: string;
-  password: string;
+  password?: string;
   bio?: string;
   picture?: string;
   location?: string;
   portfolioWebsite?: string;
   reputation?: number;
-  saved: Schema.Types.ObjectId[];
-  joinedAt: Date;
+  saved?: Schema.Types.ObjectId[];
+  joinedAt?: Date;
 }
 
-const userSchema = new Schema<User>({
+const userSchema = new Schema<IUser>({
   clerkId: {
     type: String,
     required: [true, "clerkId is required."],
@@ -29,10 +29,7 @@ const userSchema = new Schema<User>({
     required: [true, "Email is required."],
     unique: true,
   },
-  password: {
-    type: String,
-    required: [true, "Password is required."],
-  },
+  password: String,
   bio: String,
   picture: String,
   location: String,
@@ -53,4 +50,4 @@ const userSchema = new Schema<User>({
   },
 });
 
-export const UserModel = models.users || model<User>("users", userSchema);
+export const UserModel = models.users || model<IUser>("users", userSchema);
