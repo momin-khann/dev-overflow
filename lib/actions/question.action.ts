@@ -1,69 +1,59 @@
 "use server";
 
-import { connectDB } from "@/lib/connectDB";
 import { CreateQuestionParams } from "@/types/params";
 import { QuestionModel } from "@/models/question.model";
 import { TagModel } from "@/models/tag.model";
 import { revalidatePath } from "next/cache";
+import { asyncHandler } from "@/helpers/asyncHandler";
 
-export const getQuestions = async () => {
-  try {
-    await connectDB();
+const getQuestions = asyncHandler(async () => {
+  // get all questions
+  const questions = await QuestionModel.find({}).populate({
+    path: "tags",
+    model: TagModel,
+  });
 
-    // get all questions
-    const questions = await QuestionModel.find({}).populate({
-      path: "tags",
-      model: TagModel,
-    });
+  if (!questions) throw new Error("error fetching questions");
 
-    return questions;
-  } catch (error) {
-    console.error("fetching questions failed", error);
-    throw error;
+  return questions;
+});
+
+const createQuestion = asyncHandler(async (params: CreateQuestionParams) => {
+  const { title, description, tags, path } = params;
+
+  // create question and save to db
+  const question = await QuestionModel.create({
+    title,
+    description,
+    // author,
+  });
+
+  if (!question) throw new Error("error creating question.");
+
+  const tagDocuments = [];
+
+  // create the tags or get them if they already exist
+  for (const tag of tags) {
+    const existingTag = await TagModel.findOneAndUpdate(
+      { name: tag.toLowerCase() },
+      {
+        $setOnInsert: { name: tag },
+        $push: { question: question._id },
+      },
+      {
+        upsert: true,
+        new: true,
+      },
+    );
+
+    tagDocuments.push(existingTag._id);
   }
-};
 
-export const createQuestion = async (params: CreateQuestionParams) => {
-  try {
-    await connectDB();
+  await QuestionModel.findByIdAndUpdate(question._id, {
+    $push: { tags: { $each: tagDocuments } },
+  });
 
-    const { title, description, tags, path } = params;
+  revalidatePath(path);
+});
 
-    // create question and save to db
-    const question = await QuestionModel.create({
-      title,
-      description,
-      // author,
-    });
-
-    await question.save();
-
-    const tagDocuments = [];
-
-    // create the tags or get them if they already exist
-    for (const tag of tags) {
-      const existingTag = await TagModel.findOneAndUpdate(
-        { name: tag.toLowerCase() },
-        {
-          $setOnInsert: { name: tag },
-          $push: { question: question._id },
-        },
-        {
-          upsert: true,
-          new: true,
-        },
-      );
-
-      tagDocuments.push(existingTag._id);
-    }
-
-    await QuestionModel.findByIdAndUpdate(question._id, {
-      $push: { tags: { $each: tagDocuments } },
-    });
-
-    revalidatePath(path);
-  } catch (error) {
-    console.error("question creation failed. ", error);
-    throw error;
-  }
-};
+export { getQuestions, createQuestion };

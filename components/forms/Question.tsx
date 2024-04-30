@@ -25,11 +25,7 @@ import toast from "react-hot-toast";
 
 let type: string = "create";
 
-interface OwnProps {}
-
-type Props = OwnProps;
-
-const Question: FunctionComponent<Props> = (props) => {
+const Question: FunctionComponent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef(null);
 
