@@ -37,7 +37,7 @@ const updateUser = asyncHandler(async (params: UpdateUserParams) => {
   const { clerkId, updateData, path } = params;
   const user = await UserModel.findOneAndUpdate(
     { clerkId },
-    { $set: { updateData } },
+    { $set: { ...updateData } },
     { new: true },
   );
 
