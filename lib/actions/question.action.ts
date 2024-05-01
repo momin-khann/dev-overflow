@@ -60,4 +60,22 @@ const createQuestion = asyncHandler(async (params: CreateQuestionParams) => {
   revalidatePath(path);
 });
 
-export { getQuestions, createQuestion };
+const getQuestionById = asyncHandler(async (id: string) => {
+  const question = await QuestionModel.findById(id)
+    .populate({
+      path: "tags",
+      model: TagModel,
+      select: "_id name",
+    })
+    .populate({
+      path: "author",
+      model: UserModel,
+      select: "_id clerkId name picture",
+    });
+
+  if (!question) throw new Error("Question not found.");
+
+  return question;
+});
+
+export { getQuestions, createQuestion, getQuestionById };
