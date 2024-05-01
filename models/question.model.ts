@@ -45,6 +45,7 @@ const questionSchema = new Schema<IQuestion>(
         ref: "answers",
       },
     ],
+    author: Schema.Types.ObjectId,
   },
   { timestamps: true },
 );

@@ -4,7 +4,7 @@ export interface CreateQuestionParams {
   title: string;
   description: string;
   tags: string[];
-  // author: Schema.Types.ObjectId | User;
+  author: Schema.Types.ObjectId | User;
   path: string;
 }
 

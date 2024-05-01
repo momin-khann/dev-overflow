@@ -57,7 +57,7 @@ const QuestionCard: FunctionComponent<Props> = ({
 
       <div className="flex-between mt-6 w-full flex-wrap gap-3">
         <Metric
-          imgUrl={"/assets/icons/avatar.svg"}
+          imgUrl={author.picture ? author.picture : "/assets/icons/avatar.svg"}
           alt={"user"}
           value={author?.name}
           title={""}

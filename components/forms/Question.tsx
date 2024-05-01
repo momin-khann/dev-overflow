@@ -20,12 +20,16 @@ import { questionSchema } from "@/schemas/questionSchema";
 import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { createQuestion } from "@/lib/actions/question.action";
 import toast from "react-hot-toast";
+import { getUserById } from "@/lib/actions/user.action";
+import { createQuestion } from "@/lib/actions/question.action";
 
 let type: string = "create";
 
-const Question: FunctionComponent = () => {
+interface Props {
+  clerkId: string;
+}
+const Question: FunctionComponent<Props> = ({ clerkId }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef(null);
 
@@ -44,17 +48,19 @@ const Question: FunctionComponent = () => {
     setIsSubmitting(true);
 
     try {
+      const { _id } = await getUserById(clerkId);
+
       // make an async call to your API
       // containing all form data
       await createQuestion({
         title: formData.title,
         description: formData.description,
-        // author: "",
+        author: _id,
         tags: formData.tags,
         path: "/",
       });
-      // pop-up with sweet alert and then navigate to home page.
 
+      // pop-up with sweet alert and then navigate to home page.
       toast.success("Question created successfully.");
 
       form.reset();
@@ -218,7 +224,7 @@ const Question: FunctionComponent = () => {
                       {field.value.map((tag) => (
                         <Badge
                           key={tag}
-                          className="subtle-medium background-light800_dark300 text0light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
+                          className="subtle-medium background-light800_dark300 text0light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 uppercase"
                         >
                           {tag}
                           <Image
