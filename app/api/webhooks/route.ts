@@ -82,7 +82,7 @@ export async function POST(req: Request) {
       updateData: {
         name: `${first_name} ${last_name}`,
         email: email_addresses[0].email_address,
-        username: username,
+        username: username!,
         picture: image_url,
       },
       path: `/profile/${id}`,
