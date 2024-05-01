@@ -16,7 +16,7 @@ const getAllUsers = asyncHandler(async () => {
 
 const getUserById = asyncHandler(async (userId: string) => {
   // get single users
-  const user = await UserModel.findById(userId);
+  const user = await UserModel.findOne({ clerkId: userId });
 
   if (!user) throw new Error("error fetching user.");
 
@@ -38,7 +38,7 @@ const updateUser = asyncHandler(async (params: UpdateUserParams) => {
   const user = await UserModel.findOneAndUpdate(
     { clerkId },
     { $set: { updateData } },
-    { new: true, upsert: true },
+    { new: true },
   );
 
   if (!user) throw new Error("error updating user.");

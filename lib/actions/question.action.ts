@@ -5,13 +5,17 @@ import { QuestionModel } from "@/models/question.model";
 import { TagModel } from "@/models/tag.model";
 import { revalidatePath } from "next/cache";
 import { asyncHandler } from "@/helpers/asyncHandler";
+import { UserModel } from "@/models/user.model";
 
 const getQuestions = asyncHandler(async () => {
   // get all questions
-  const questions = await QuestionModel.find({}).populate({
-    path: "tags",
-    model: TagModel,
-  });
+  const questions = await QuestionModel.find({})
+    .populate({
+      path: "tags",
+      model: TagModel,
+    })
+    .populate({ path: "author", model: UserModel })
+    .sort({ createdAt: -1 });
 
   if (!questions) throw new Error("error fetching questions");
 
@@ -19,13 +23,13 @@ const getQuestions = asyncHandler(async () => {
 });
 
 const createQuestion = asyncHandler(async (params: CreateQuestionParams) => {
-  const { title, description, tags, path } = params;
+  const { title, description, tags, path, author } = params;
 
   // create question and save to db
   const question = await QuestionModel.create({
     title,
     description,
-    // author,
+    author,
   });
 
   if (!question) throw new Error("error creating question.");
@@ -38,7 +42,7 @@ const createQuestion = asyncHandler(async (params: CreateQuestionParams) => {
       { name: tag.toLowerCase() },
       {
         $setOnInsert: { name: tag },
-        $push: { question: question._id },
+        $push: { questions: question._id },
       },
       {
         upsert: true,

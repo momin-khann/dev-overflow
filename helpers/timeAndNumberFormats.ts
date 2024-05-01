@@ -41,6 +41,8 @@ enum Number {
   LAC = 100000,
 }
 export const formatNumber = (num: number): string => {
+  if (isNaN(num)) return "0";
+
   if (num >= Number.MILLION) {
     const formattedNumber = (num / Number.MILLION).toFixed(2);
     return `${formattedNumber}M`;
