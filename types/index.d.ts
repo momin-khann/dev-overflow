@@ -6,7 +6,7 @@ export interface SidebarLink {
   label: string;
 }
 
-export interface Question {
+export interface QuestionType {
   _id: string;
   title: string;
   tags: { _id: string; name: string }[];
@@ -17,7 +17,24 @@ export interface Question {
   createdAt: Date;
 }
 
-export interface Job {
+export interface UserType {
+  _id: string;
+  clerkId: string;
+  picture: string;
+  name: string;
+  username: string;
+}
+
+export interface TagType {
+  _id: string;
+  name: string;
+  description?: string;
+  questions?: object[];
+  followers?: object[];
+  createdOn?: Date;
+}
+
+export interface JobType {
   id?: string;
   employer_name?: string;
   employer_logo?: string | undefined;
@@ -31,7 +48,7 @@ export interface Job {
   job_country?: string;
 }
 
-export interface Country {
+export interface CountryType {
   name: {
     common: string;
   };

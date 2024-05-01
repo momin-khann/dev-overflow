@@ -3,9 +3,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 import Filter from "@/components/shared/Filter";
-import { homePageFilters } from "@/data/filters";
+import { userFilters } from "@/data/filters";
+import UserCard from "@/components/cards/UserCard";
+import { getAllUsers } from "@/lib/actions/user.action";
+import { UserType } from "@/types";
 
-const page: FunctionComponent = () => {
+const page: FunctionComponent = async () => {
+  const users = await getAllUsers();
+
   return (
     <main>
       {/*top header*/}
@@ -22,20 +27,31 @@ const page: FunctionComponent = () => {
       {/*search bar && filter*/}
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearch
+          route={"/community"}
           iconPosition={"left"}
-          placeholder={"Search for questions"}
+          placeholder={"Search for users"}
           otherClasses={"flex-1"}
         />
 
         <Filter
-          filters={homePageFilters}
+          filters={userFilters}
           otherClasses={"min-h-[56px] sm:min-w-[170px]"}
-          containerClasses={"hidden md:flex"}
         />
       </div>
 
       {/* All Users */}
-      <section className="mt-12 flex flex-wrap gap-4">{/*  */}</section>
+      <section className="mt-12 flex flex-wrap gap-4">
+        {users.length > 0 ? (
+          users.map((user: UserType) => <UserCard key={user._id} user={user} />)
+        ) : (
+          <div className="paragraph-regular text-dark200_light800 mx-auto max-w-4xl text-center">
+            <p>No users yet</p>
+            <Link href="/sign-up" className="mt-2 font-bold text-accent-blue">
+              Join to be the first!
+            </Link>
+          </div>
+        )}
+      </section>
     </main>
   );
 };

@@ -8,10 +8,10 @@ import NoResult from "@/components/shared/NoResult";
 import QuestionCard from "@/components/cards/QuestionCard";
 // import { questions } from "@/data/questions";
 import { getQuestions } from "@/lib/actions/question.action";
-import { Question } from "@/types";
+import { QuestionType } from "@/types";
 
 export default async function Home() {
-  const questions: Array<Question> = await getQuestions();
+  const questions: Array<QuestionType> = await getQuestions();
 
   return (
     <main>
@@ -44,7 +44,7 @@ export default async function Home() {
       <HomeFilters />
 
       {questions.length > 0 ? (
-        questions.map((question: Question) => (
+        questions.map((question: QuestionType) => (
           <QuestionCard
             key={question._id}
             _id={question._id}
