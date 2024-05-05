@@ -6,6 +6,7 @@ import Metric from "@/components/shared/Metric";
 import { formatNumber, getTimestamp } from "@/helpers/timeAndNumberFormats";
 import RenderTag from "@/components/shared/RenderTag";
 import ParseHTML from "@/components/shared/ParseHTML";
+import Answer from "@/components/forms/Answer";
 
 interface OwnProps {
   params: { id: string };
@@ -82,7 +83,7 @@ const page: FunctionComponent<Props> = async ({ params }) => {
       </div>
 
       {/* Answers */}
-      <div>Display Answers</div>
+      <Answer />
     </>
   );
 };

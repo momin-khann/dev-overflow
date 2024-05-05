@@ -13,8 +13,6 @@ import {
 import { ControllerRenderProps, useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Editor } from "@tinymce/tinymce-react";
-import { richTextEditor } from "@/lib/richTextEditor";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { questionSchema } from "@/schemas/questionSchema";
 import { z } from "zod";
@@ -23,6 +21,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { getUserById } from "@/lib/actions/user.action";
 import { createQuestion } from "@/lib/actions/question.action";
+import RichTextEditor from "@/components/forms/RichTextEditor";
 
 let type: string = "create";
 
@@ -175,17 +174,7 @@ const Question: FunctionComponent<Props> = ({ clerkId }) => {
                     <span className={"text-primary-500"}>*</span>
                   </FormLabel>
                   <FormControl className={"mt-3.5"}>
-                    <Editor
-                      apiKey={richTextEditor.apiKey}
-                      onInit={(_evt, editor) => {
-                        // @ts-ignore
-                        editorRef.current = editor;
-                      }}
-                      // initialValue=""
-                      init={richTextEditor.init}
-                      onBlur={field.onBlur}
-                      onEditorChange={(content) => field.onChange(content)}
-                    />
+                    <RichTextEditor ref={editorRef} field={field} />
                   </FormControl>
                   <FormDescription
                     className={"body-regular mt-2.5 text-light-500"}
