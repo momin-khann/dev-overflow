@@ -3,10 +3,12 @@ import { getQuestionById } from "@/lib/actions/question.action";
 import Link from "next/link";
 import Image from "next/image";
 import Metric from "@/components/shared/Metric";
-import { formatNumber, getTimestamp } from "@/helpers/timeAndNumberFormats";
+import { formatNumber, getTimestamp } from "@/helpers/sanitizer";
 import RenderTag from "@/components/shared/RenderTag";
 import ParseHTML from "@/components/shared/ParseHTML";
 import Answer from "@/components/forms/Answer";
+import { getMongoUserId } from "@/helpers/getMongoUser";
+import AllAnswers from "@/components/shared/AllAnswers";
 
 interface OwnProps {
   params: { id: string };
@@ -15,6 +17,7 @@ interface OwnProps {
 type Props = OwnProps;
 
 const page: FunctionComponent<Props> = async ({ params }) => {
+  const mongoUserId = await getMongoUserId();
   const question = await getQuestionById(params.id);
 
   return (
@@ -82,8 +85,14 @@ const page: FunctionComponent<Props> = async ({ params }) => {
         ))}
       </div>
 
+      <AllAnswers
+        questionId={params.id}
+        mongoUserId={mongoUserId}
+        totalAnswers={question.answers.length}
+      />
+
       {/* Answers */}
-      <Answer />
+      <Answer mongoUserId={mongoUserId} questionId={params.id} />
     </>
   );
 };

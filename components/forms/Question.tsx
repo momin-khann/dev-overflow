@@ -63,6 +63,11 @@ const Question: FunctionComponent<Props> = ({ clerkId }) => {
       toast.success("Question created successfully.");
 
       form.reset();
+
+      if (editorRef.current) {
+        // @ts-ignore
+        editorRef.current.setContent("");
+      }
     } catch (error) {
       toast.error("Error submitting Question");
       console.error("Error submitting Question. " + error);

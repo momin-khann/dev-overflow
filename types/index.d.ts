@@ -17,6 +17,16 @@ export interface QuestionType {
   createdAt: Date;
 }
 
+export interface AnswerType {
+  _id: string;
+  question: object;
+  answer: string;
+  author: Partial<UserType>;
+  upvotes?: object[];
+  downvotes?: object[];
+  createdAt?: Date;
+}
+
 export interface UserType {
   _id: string;
   clerkId: string;
