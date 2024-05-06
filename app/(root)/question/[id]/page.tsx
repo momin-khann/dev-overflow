@@ -3,10 +3,13 @@ import { getQuestionById } from "@/lib/actions/question.action";
 import Link from "next/link";
 import Image from "next/image";
 import Metric from "@/components/shared/Metric";
-import { formatNumber, getTimestamp } from "@/helpers/timeAndNumberFormats";
+import { formatNumber, getTimestamp } from "@/helpers/sanitizer";
 import RenderTag from "@/components/shared/RenderTag";
 import ParseHTML from "@/components/shared/ParseHTML";
 import Answer from "@/components/forms/Answer";
+import { getMongoUserId } from "@/helpers/getMongoUser";
+import AllAnswers from "@/components/shared/AllAnswers";
+import Votes from "@/components/shared/Votes";
 
 interface OwnProps {
   params: { id: string };
@@ -15,6 +18,7 @@ interface OwnProps {
 type Props = OwnProps;
 
 const page: FunctionComponent<Props> = async ({ params }) => {
+  const mongoUserId = await getMongoUserId();
   const question = await getQuestionById(params.id);
 
   return (
@@ -36,7 +40,17 @@ const page: FunctionComponent<Props> = async ({ params }) => {
               {question.author.name}
             </p>
           </Link>
-          <div className="flex justify-end">VOTING</div>
+          <div className="flex justify-end">
+            <Votes
+              type={"question"}
+              itemId={question._id.toString()}
+              userId={mongoUserId}
+              upvotes={question.upvotes?.length ?? 0}
+              downvotes={question.downvotes?.length ?? 0}
+              hasUpVoted={question.upvotes?.includes(mongoUserId) ?? false}
+              hasDownVoted={question.downvotes?.includes(mongoUserId) ?? false}
+            />
+          </div>
         </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
           {question.title}
@@ -82,8 +96,14 @@ const page: FunctionComponent<Props> = async ({ params }) => {
         ))}
       </div>
 
+      <AllAnswers
+        questionId={params.id}
+        mongoUserId={mongoUserId}
+        totalAnswers={question.answers.length}
+      />
+
       {/* Answers */}
-      <Answer />
+      <Answer mongoUserId={mongoUserId} questionId={params.id} />
     </>
   );
 };

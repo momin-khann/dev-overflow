@@ -6,23 +6,23 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useTheme } from "@/context/ThemeProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { answerSchema } from "@/schemas/answerSchema";
 import { z } from "zod";
 import RichTextEditor from "@/components/forms/RichTextEditor";
+import { createAnswer } from "@/lib/actions/answer.action";
+import toast from "react-hot-toast";
 
-const type: string = "create";
-
-export default function Answer() {
-  const { mode } = useTheme();
+interface Props {
+  questionId: string;
+  mongoUserId: string;
+}
+export default function Answer({ questionId, mongoUserId }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef(null);
   const form = useForm<z.infer<typeof answerSchema>>({
@@ -32,14 +32,28 @@ export default function Answer() {
     },
   });
 
-  const skinColor = mode === "dark" ? "oxide-dark" : "snow";
-  const contentColor = mode === "dark" ? "dark" : "default";
-
-  function onSubmit(formData: z.infer<typeof answerSchema>) {
+  async function onSubmit(formData: z.infer<typeof answerSchema>) {
     try {
       setIsSubmitting(true);
 
-      console.log(formData);
+      if (!mongoUserId) {
+        toast.error("Login first to submit answer.");
+      }
+
+      await createAnswer({
+        question: questionId,
+        answer: formData.answer.trim(),
+        author: mongoUserId,
+      });
+
+      form.reset();
+
+      if (editorRef.current) {
+        // @ts-ignore
+        editorRef.current.setContent("");
+      }
+
+      toast.success("answer submitted.");
     } catch (error) {
     } finally {
       setIsSubmitting(false);
@@ -48,7 +62,7 @@ export default function Answer() {
 
   return (
     <div>
-      <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
+      <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2 mt-6">
         <h4 className="paragraph-semibold text-dark400_light800">
           Write your answer here
         </h4>
@@ -72,7 +86,7 @@ export default function Answer() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col w-full gap-10"
+          className="flex flex-col w-full gap-10 mt-4"
         >
           {/*Explanation Field*/}
           <FormField
@@ -80,21 +94,9 @@ export default function Answer() {
             name={"answer"}
             render={({ field }) => (
               <FormItem className={"flex w-full flex-col gap-3"}>
-                <FormLabel
-                  className={"paragraph-semibold text-dark400_light800"}
-                >
-                  Write your answer here
-                  <span className={"text-primary-500"}>*</span>
-                </FormLabel>
-                <FormControl className={"mt-3.5"}>
+                <FormControl className={"mt-6"}>
                   <RichTextEditor ref={editorRef} field={field} />
                 </FormControl>
-                <FormDescription
-                  className={"body-regular mt-2.5 text-light-500"}
-                >
-                  Introduce the problem and expand on what you put in the title.
-                  Minimum 20 characters.
-                </FormDescription>
                 <FormMessage className={"text-red-500"} />
               </FormItem>
             )}
@@ -106,11 +108,7 @@ export default function Answer() {
             className={"primary-gradient w-fit !text-light-900"}
             disabled={isSubmitting}
           >
-            {isSubmitting ? (
-              <> {type === "edit" ? "Editing..." : "Posting..."} </>
-            ) : (
-              <>{type === "edit" ? "Edit Question" : "Ask a Question"}</>
-            )}
+            {isSubmitting ? <>Submitting</> : <>Submit Answer</>}
           </Button>
         </form>
       </Form>

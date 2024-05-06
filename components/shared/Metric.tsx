@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { formatNumber } from "@/helpers/timeAndNumberFormats";
+import { formatNumber } from "@/helpers/sanitizer";
 
 interface OwnProps {
   imgUrl: string;

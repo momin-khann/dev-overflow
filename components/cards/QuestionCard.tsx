@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import Link from "next/link";
 import RenderTag from "@/components/shared/RenderTag";
 import Metric from "@/components/shared/Metric";
-import { getTimestamp } from "@/helpers/timeAndNumberFormats";
+import { getTimestamp } from "@/helpers/sanitizer";
 
 interface OwnProps {
   _id: string;

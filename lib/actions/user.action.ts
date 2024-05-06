@@ -14,13 +14,21 @@ const getAllUsers = asyncHandler(async () => {
   return users;
 });
 
-const getUserById = asyncHandler(async (userId: string) => {
+const getUserById = asyncHandler(async (clerkId: string) => {
   // get single users
-  const user = await UserModel.findOne({ clerkId: userId });
+  const user = await UserModel.findOne({ clerkId });
 
   if (!user) throw new Error("error fetching user.");
 
   return user;
+});
+
+export const getUserId = asyncHandler(async (clerkId: string) => {
+  const user = await UserModel.findOne({ clerkId });
+
+  if (!user) throw new Error("error fetching user.");
+
+  return user._id;
 });
 
 const createUser = asyncHandler(async (params: CreateUserParams) => {
