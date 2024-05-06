@@ -36,40 +36,36 @@ const Votes = ({
   async function handleVote(action: string) {
     if (!userId) return;
 
-    if (action === "upvote") {
-      if (type === "question") {
-        await upvoteQuestion({
-          questionId: itemId,
-          userId,
-          hasUpVoted,
-          hasDownVoted,
-        });
-      } else if (type === "answer") {
-        await upvoteAnswer({
-          answerId: itemId,
-          userId,
-          hasUpVoted,
-          hasDownVoted,
-          path,
-        });
-      }
-    } else if (action === "downvote") {
-      if (type === "question") {
-        await downvoteQuestion({
-          questionId: itemId,
-          userId,
-          hasUpVoted,
-          hasDownVoted,
-        });
-      } else if (type === "answer") {
-        await downvoteAnswer({
-          answerId: itemId,
-          userId,
-          hasUpVoted,
-          hasDownVoted,
-          path,
-        });
-      }
+    if (action === "upvote" && type === "question") {
+      await upvoteQuestion({
+        questionId: itemId,
+        userId,
+        hasUpVoted,
+        hasDownVoted,
+      });
+    } else if (action === "upvote" && type === "answer") {
+      await upvoteAnswer({
+        answerId: itemId,
+        userId,
+        hasUpVoted,
+        hasDownVoted,
+        path,
+      });
+    } else if (action === "downvote" && type === "question") {
+      await downvoteQuestion({
+        questionId: itemId,
+        userId,
+        hasUpVoted,
+        hasDownVoted,
+      });
+    } else if (action === "downvote" && type === "answer") {
+      await downvoteAnswer({
+        answerId: itemId,
+        userId,
+        hasUpVoted,
+        hasDownVoted,
+        path,
+      });
     }
   }
 

@@ -1,5 +1,3 @@
-// "use client";
-
 import React from "react";
 import Link from "next/link";
 import { getTimestamp } from "@/helpers/sanitizer";
@@ -10,7 +8,6 @@ import { getAnswers } from "@/lib/actions/answer.action";
 import { AnswerType } from "@/types";
 import ParseHTML from "@/components/shared/ParseHTML";
 import Votes from "@/components/shared/Votes";
-import { usePathname } from "next/navigation";
 
 interface Props {
   totalAnswers: number;
@@ -20,9 +17,6 @@ interface Props {
 
 const AllAnswers = async ({ totalAnswers, questionId, mongoUserId }: Props) => {
   const answers: Array<AnswerType> = await getAnswers(questionId);
-  // const path = usePathname();
-
-  // console.log(path);
 
   return (
     <div className={"mt-11"}>
@@ -64,13 +58,12 @@ const AllAnswers = async ({ totalAnswers, questionId, mongoUserId }: Props) => {
                   <div className="flex justify-end">
                     <Votes
                       type={"answer"}
-                      itemId={answer._id}
+                      itemId={answer._id.toString()}
                       userId={mongoUserId}
                       upvotes={answer.upvotes?.length ?? 0}
                       downvotes={answer.downvotes?.length ?? 0}
                       hasUpVoted={answer.upvotes?.includes(mongoUserId)!}
                       hasDownVoted={answer.downvotes?.includes(mongoUserId)!}
-                      // path={}
                     />
                   </div>
                 </div>

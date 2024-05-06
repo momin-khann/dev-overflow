@@ -43,7 +43,7 @@ const page: FunctionComponent<Props> = async ({ params }) => {
           <div className="flex justify-end">
             <Votes
               type={"question"}
-              itemId={question._id}
+              itemId={question._id.toString()}
               userId={mongoUserId}
               upvotes={question.upvotes?.length ?? 0}
               downvotes={question.downvotes?.length ?? 0}
