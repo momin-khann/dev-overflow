@@ -22,8 +22,8 @@ export interface AnswerType {
   question: object;
   answer: string;
   author: Partial<UserType>;
-  upvotes?: object[];
-  downvotes?: object[];
+  upvotes?: Array<string>;
+  downvotes?: Array<string>;
   createdAt?: Date;
 }
 

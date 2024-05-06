@@ -1,6 +1,6 @@
 "use server";
 
-import { CreateQuestionParams } from "@/types/params";
+import { CreateQuestionParams, QuestionVoteParams } from "@/types/params";
 import { QuestionModel } from "@/models/question.model";
 import { TagModel } from "@/models/tag.model";
 import { revalidatePath } from "next/cache";
@@ -78,4 +78,64 @@ const getQuestionById = asyncHandler(async (id: string) => {
   return question;
 });
 
-export { getQuestions, createQuestion, getQuestionById };
+const upvoteQuestion = asyncHandler(async (params: QuestionVoteParams) => {
+  const { questionId, userId, hasUpVoted, hasDownVoted } = params;
+
+  let updateQuery = {};
+
+  if (hasUpVoted) {
+    if (!hasDownVoted) updateQuery = { $pull: { upvotes: userId } };
+  } else if (hasDownVoted) {
+    if (!hasUpVoted)
+      updateQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
+  } else {
+    updateQuery = { $push: { upvotes: userId } };
+  }
+
+  const question = await QuestionModel.findByIdAndUpdate(
+    questionId,
+    updateQuery,
+    { new: true },
+  );
+
+  if (!question) throw new Error("Question not found.");
+
+  revalidatePath(`/question/${questionId}`);
+});
+
+const downvoteQuestion = asyncHandler(async (params: QuestionVoteParams) => {
+  const { questionId, userId, hasUpVoted, hasDownVoted } = params;
+
+  let updateQuery = {};
+
+  if (hasDownVoted) {
+    updateQuery = { $pull: { downvotes: userId } };
+  } else if (hasUpVoted) {
+    updateQuery = {
+      $pull: { upvotes: userId },
+      $push: { downvotes: userId },
+    };
+  } else {
+    updateQuery = { $push: { downvotes: userId } };
+  }
+  const question = await QuestionModel.findByIdAndUpdate(
+    questionId,
+    updateQuery,
+    { new: true },
+  );
+
+  if (!question) throw new Error("Question not found.");
+
+  revalidatePath(`/question/${questionId}`);
+});
+
+export {
+  getQuestions,
+  createQuestion,
+  getQuestionById,
+  upvoteQuestion,
+  downvoteQuestion,
+};

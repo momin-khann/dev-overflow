@@ -2,7 +2,11 @@
 
 import { asyncHandler } from "@/helpers/asyncHandler";
 import { AnswerModel } from "@/models/answer.model";
-import { CreateAnswerParams, UpdateAnswerParams } from "@/types/params";
+import {
+  AnswerVoteParams,
+  CreateAnswerParams,
+  UpdateAnswerParams,
+} from "@/types/params";
 import { UserModel } from "@/models/user.model";
 import { QuestionModel } from "@/models/question.model";
 import { revalidatePath } from "next/cache";
@@ -52,4 +56,62 @@ export const deleteAnswer = asyncHandler(async (id: string) => {
   if (!answer) throw new Error("error deleting answer.");
 
   return answer;
+});
+
+export const upvoteAnswer = asyncHandler(async (params: AnswerVoteParams) => {
+  const { answerId, userId, hasUpVoted, hasDownVoted, path } = params;
+
+  if (!userId) throw new Error("User not Logged In");
+
+  let query = {};
+
+  if (hasUpVoted) {
+    query = { $pull: { upvotes: userId } };
+  } else if (hasDownVoted) {
+    query = {
+      $pull: { downvotes: userId },
+      $push: { upvotes: userId },
+    };
+  } else {
+    query = {
+      $push: { upvotes: userId },
+    };
+  }
+
+  const answer = await AnswerModel.findByIdAndUpdate(answerId, query, {
+    new: true,
+  });
+
+  if (!answer) throw new Error("Error fetching answer");
+
+  revalidatePath(path!);
+});
+
+export const downvoteAnswer = asyncHandler(async (params: AnswerVoteParams) => {
+  const { answerId, userId, hasUpVoted, hasDownVoted, path } = params;
+
+  if (!userId) throw new Error("User not Logged In");
+
+  let query = {};
+
+  if (hasDownVoted) {
+    query = { $pull: { downvotes: userId } };
+  } else if (hasUpVoted) {
+    query = {
+      $pull: { upvotes: userId },
+      $push: { downvotes: userId },
+    };
+  } else {
+    query = {
+      $push: { downvotes: userId },
+    };
+  }
+
+  const answer = await AnswerModel.findByIdAndUpdate(answerId, query, {
+    new: true,
+  });
+
+  if (!answer) throw new Error("Error fetching answer");
+
+  revalidatePath(path!);
 });

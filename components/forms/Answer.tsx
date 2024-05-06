@@ -62,7 +62,7 @@ export default function Answer({ questionId, mongoUserId }: Props) {
 
   return (
     <div>
-      <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
+      <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2 mt-6">
         <h4 className="paragraph-semibold text-dark400_light800">
           Write your answer here
         </h4>
@@ -86,7 +86,7 @@ export default function Answer({ questionId, mongoUserId }: Props) {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col w-full gap-10"
+          className="flex flex-col w-full gap-10 mt-4"
         >
           {/*Explanation Field*/}
           <FormField

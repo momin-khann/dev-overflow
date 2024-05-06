@@ -9,10 +9,6 @@ export interface CreateQuestionParams {
   path: string;
 }
 
-export interface GetAnswersParams {}
-
-export interface GetQuestionByIdParams {}
-
 export interface CreateAnswerParams {
   clerkId?: string;
   _id?: string;
@@ -53,4 +49,20 @@ export interface UpdateUserParams {
   clerkId: string;
   updateData: Partial<IUser>;
   path: string;
+}
+
+export interface QuestionVoteParams {
+  questionId: string;
+  userId: string;
+  hasUpVoted: boolean;
+  hasDownVoted: boolean;
+  path?: string;
+}
+
+export interface AnswerVoteParams {
+  answerId: string;
+  userId: string;
+  hasUpVoted: boolean;
+  hasDownVoted: boolean;
+  path?: string;
 }

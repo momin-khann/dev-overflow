@@ -9,6 +9,7 @@ import ParseHTML from "@/components/shared/ParseHTML";
 import Answer from "@/components/forms/Answer";
 import { getMongoUserId } from "@/helpers/getMongoUser";
 import AllAnswers from "@/components/shared/AllAnswers";
+import Votes from "@/components/shared/Votes";
 
 interface OwnProps {
   params: { id: string };
@@ -39,7 +40,17 @@ const page: FunctionComponent<Props> = async ({ params }) => {
               {question.author.name}
             </p>
           </Link>
-          <div className="flex justify-end">VOTING</div>
+          <div className="flex justify-end">
+            <Votes
+              type={"question"}
+              itemId={question._id}
+              userId={mongoUserId}
+              upvotes={question.upvotes?.length ?? 0}
+              downvotes={question.downvotes?.length ?? 0}
+              hasUpVoted={question.upvotes?.includes(mongoUserId) ?? false}
+              hasDownVoted={question.downvotes?.includes(mongoUserId) ?? false}
+            />
+          </div>
         </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
           {question.title}
