@@ -24,12 +24,17 @@ const AllAnswers = async ({ totalAnswers, questionId, mongoUserId }: Props) => {
         <h3 className="primary-text-gradient">
           {`${totalAnswers} Answer${totalAnswers > 1 ? "s" : ""}`}
         </h3>
-        {answers.length > 0 && <Filter filters={answerFilters} />}
+        {answers?.length > 0 && (
+          <Filter
+            filters={answerFilters}
+            otherClasses={"min-h-[48px] sm:min-w-[150px]"}
+          />
+        )}
       </div>
 
       {/* Display all answers */}
       <div>
-        {answers.length > 0 &&
+        {answers?.length > 0 &&
           answers.map((answer: AnswerType) => (
             <article key={answer._id} className="light-border border-b py-10">
               <div className="flex items-center justify-between">

@@ -9,6 +9,7 @@ import {
 } from "@/lib/actions/question.action";
 import { usePathname } from "next/navigation";
 import { downvoteAnswer, upvoteAnswer } from "@/lib/actions/answer.action";
+import { saveQuestion } from "@/lib/actions/user.action";
 
 interface Props {
   type: string;
@@ -69,7 +70,13 @@ const Votes = ({
     }
   }
 
-  function handleSave() {}
+  async function handleSave() {
+    await saveQuestion({
+      userId,
+      questionId: itemId,
+      path,
+    });
+  }
 
   return (
     <div className="flex gap-5">

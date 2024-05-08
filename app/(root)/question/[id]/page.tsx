@@ -7,7 +7,7 @@ import { formatNumber, getTimestamp } from "@/helpers/sanitizer";
 import RenderTag from "@/components/shared/RenderTag";
 import ParseHTML from "@/components/shared/ParseHTML";
 import Answer from "@/components/forms/Answer";
-import { getMongoUserId } from "@/helpers/getMongoUser";
+import { getMongoUser, getMongoUserId } from "@/helpers/getMongoUser";
 import AllAnswers from "@/components/shared/AllAnswers";
 import Votes from "@/components/shared/Votes";
 
@@ -20,6 +20,7 @@ type Props = OwnProps;
 const page: FunctionComponent<Props> = async ({ params }) => {
   const mongoUserId = await getMongoUserId();
   const question = await getQuestionById(params.id);
+  const user = await getMongoUser();
 
   return (
     <>
@@ -49,6 +50,7 @@ const page: FunctionComponent<Props> = async ({ params }) => {
               downvotes={question.downvotes?.length ?? 0}
               hasUpVoted={question.upvotes?.includes(mongoUserId) ?? false}
               hasDownVoted={question.downvotes?.includes(mongoUserId) ?? false}
+              hasSaved={user.saved?.includes(question._id.toString()) ?? false}
             />
           </div>
         </div>
