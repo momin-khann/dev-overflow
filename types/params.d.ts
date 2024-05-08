@@ -19,6 +19,7 @@ export interface CreateAnswerParams {
   downvotes?: object[];
   createdAt: Date;
 }
+
 export interface UpdateAnswerParams {
   _id: string;
   clerkId?: string;
@@ -71,4 +72,9 @@ export interface SaveQuestionParams {
   userId: string;
   questionId: string;
   path?: string;
+}
+
+export interface ViewQuestionParams {
+  questionId: string;
+  userId: string | undefined;
 }

@@ -1,15 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { formatNumber } from "@/helpers/sanitizer";
 import {
   downvoteQuestion,
   upvoteQuestion,
 } from "@/lib/actions/question.action";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { downvoteAnswer, upvoteAnswer } from "@/lib/actions/answer.action";
 import { saveQuestion } from "@/lib/actions/user.action";
+import { viewQuestion } from "@/lib/actions/interaction.action";
 
 interface Props {
   type: string;
@@ -33,6 +34,16 @@ const Votes = ({
   hasSaved,
 }: Props) => {
   const path = usePathname();
+  const router = useRouter(); // for reload page view
+
+  useEffect(() => {
+    if (type === "question") {
+      viewQuestion({
+        questionId: itemId,
+        userId: userId ?? undefined,
+      });
+    }
+  }, [itemId, userId, path, router]);
 
   async function handleVote(action: string) {
     if (!userId) return;
