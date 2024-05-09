@@ -6,7 +6,6 @@ import { homePageFilters } from "@/data/filters";
 import HomeFilters from "@/components/home/HomeFilters";
 import NoResult from "@/components/shared/NoResult";
 import QuestionCard from "@/components/cards/QuestionCard";
-// import { questions } from "@/data/questions";
 import { getQuestions } from "@/lib/actions/question.action";
 import { QuestionType } from "@/types";
 
@@ -43,7 +42,7 @@ export default async function Home() {
 
       <HomeFilters />
 
-      {questions.length > 0 ? (
+      {questions?.length > 0 ? (
         questions.map((question: QuestionType) => (
           <QuestionCard
             key={question._id}

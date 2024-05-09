@@ -1,5 +1,23 @@
 // All helper functions
 
+enum Number {
+  MILLION = 1000000,
+  LAC = 100000,
+}
+export const formatNumber = (num: number): string => {
+  if (isNaN(num)) return "0";
+
+  if (num >= Number.MILLION) {
+    const formattedNumber = (num / Number.MILLION).toFixed(2);
+    return `${formattedNumber}M`;
+  } else if (num >= Number.LAC) {
+    const formattedNumber = (num / Number.LAC).toFixed(2);
+    return `${formattedNumber}K`;
+  }
+
+  return num.toString();
+};
+
 export const getTimestamp = (createdAt: Date): string => {
   const now = new Date();
   const timeDifference = now.getTime() - createdAt.getTime();
@@ -36,20 +54,18 @@ export const getTimestamp = (createdAt: Date): string => {
   }
 };
 
-enum Number {
-  MILLION = 1000000,
-  LAC = 100000,
-}
-export const formatNumber = (num: number): string => {
-  if (isNaN(num)) return "0";
+export const capitalizeWord = (word: string) => {
+  if (!word) return null;
 
-  if (num >= Number.MILLION) {
-    const formattedNumber = (num / Number.MILLION).toFixed(2);
-    return `${formattedNumber}M`;
-  } else if (num >= Number.LAC) {
-    const formattedNumber = (num / Number.LAC).toFixed(2);
-    return `${formattedNumber}K`;
-  }
+  const firstChar = word.split("")[0].toUpperCase();
 
-  return num.toString();
+  return firstChar + word.slice(1);
+};
+
+export const caplitalizeSentence = (sentence: string) => {
+  if (!sentence) return null;
+
+  const firstChar = sentence.split("")[0].toUpperCase();
+
+  return firstChar + sentence.slice(1);
 };

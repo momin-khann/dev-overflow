@@ -2,8 +2,14 @@
 
 import { UserModel } from "@/models/user.model";
 import { asyncHandler } from "@/helpers/asyncHandler";
-import { CreateUserParams, UpdateUserParams } from "@/types/params";
+import {
+  CreateUserParams,
+  SaveQuestionParams,
+  UpdateUserParams,
+} from "@/types/params";
 import { revalidatePath } from "next/cache";
+import { QuestionModel } from "@/models/question.model";
+import { TagModel } from "@/models/tag.model";
 
 const getAllUsers = asyncHandler(async () => {
   // get all users
@@ -66,4 +72,68 @@ const deleteUser = asyncHandler(async (clerkId: string) => {
   return user;
 });
 
-export { getAllUsers, getUserById, createUser, deleteUser, updateUser };
+const saveQuestion = asyncHandler(async (params: SaveQuestionParams) => {
+  const { userId, questionId, path } = params;
+
+  if (!userId) throw new Error("user not logged in.");
+
+  const user = await UserModel.findById(userId);
+
+  const isQuestionSaved = user.saved?.includes(questionId);
+
+  if (isQuestionSaved) {
+    await UserModel.findByIdAndUpdate(
+      userId,
+      { $pull: { saved: questionId } },
+      { new: true },
+    );
+  } else {
+    await UserModel.findByIdAndUpdate(
+      userId,
+      {
+        $push: { saved: questionId },
+      },
+      { new: true },
+    );
+  }
+
+  revalidatePath(path!);
+});
+
+const getSavedQuestions = asyncHandler(async (userId: string) => {
+  if (!userId) throw new Error("user not logged in.");
+
+  const questions = await UserModel.findById(userId)
+    .select("saved")
+    .populate({
+      path: "saved",
+      model: QuestionModel,
+      populate: [
+        {
+          path: "author",
+          model: UserModel,
+        },
+        {
+          path: "tags",
+          model: TagModel,
+        },
+      ],
+      options: {
+        sort: { createdAt: -1 },
+      },
+    });
+
+  if (!questions) throw new Error("no saved questions found.");
+
+  return questions.saved;
+});
+
+export {
+  getAllUsers,
+  getUserById,
+  createUser,
+  deleteUser,
+  updateUser,
+  saveQuestion,
+  getSavedQuestions,
+};

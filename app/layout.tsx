@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Inter, Space_Grotesk } from "next/font/google";
-import ThemeProvider from "@/context/ThemeProvider";
+import { ThemeProvider } from "next-themes";
 import { Toaster } from "react-hot-toast";
 import React from "react";
 
@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
         <ClerkProvider
           appearance={{
@@ -44,7 +44,9 @@ export default function RootLayout({
           }}
         >
           <Toaster position="top-center" reverseOrder={true} />
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children}
+          </ThemeProvider>
         </ClerkProvider>
       </body>
     </html>

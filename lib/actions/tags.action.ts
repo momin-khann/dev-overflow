@@ -3,6 +3,7 @@
 import { asyncHandler } from "@/helpers/asyncHandler";
 import { UserModel } from "@/models/user.model";
 import { TagModel } from "@/models/tag.model";
+import { QuestionModel } from "@/models/question.model";
 
 export const getTopInteractedTags = asyncHandler(async (userId: string) => {
   const user = await UserModel.findById(userId);
@@ -23,4 +24,24 @@ export const getAllTags = asyncHandler(async () => {
   console.log(tags);
 
   return tags;
+});
+
+export const getQuestionsByTagId = asyncHandler(async (tagId: string) => {
+  if (!tagId) throw new Error("no tag id");
+
+  const questions = await TagModel.findById(tagId).populate({
+    path: "questions",
+    model: QuestionModel,
+    options: {
+      sort: { createdAt: -1 },
+    },
+    populate: [
+      { path: "author", model: UserModel },
+      { path: "tags", model: TagModel },
+    ],
+  });
+
+  if (!questions) throw new Error("no tags found");
+
+  return questions;
 });
