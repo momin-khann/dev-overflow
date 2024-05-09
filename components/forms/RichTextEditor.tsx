@@ -2,10 +2,10 @@
 import React, { forwardRef } from "react";
 import { richTextEditor } from "@/lib/richTextEditor";
 import { Editor } from "@tinymce/tinymce-react";
-import { useTheme } from "@/context/ThemeProvider";
+import { useTheme } from "next-themes";
 
 function RichTextEditor({ field }: any, ref: any) {
-  const { mode } = useTheme();
+  const { resolvedTheme: mode } = useTheme();
 
   const skinColor = mode === "dark" ? "oxide-dark" : "snow";
   const contentColor = mode === "dark" ? "dark" : "default";

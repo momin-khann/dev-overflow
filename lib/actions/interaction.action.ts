@@ -23,7 +23,7 @@ export const viewQuestion = asyncHandler(async (params: ViewQuestionParams) => {
       action: "view",
     });
 
-    if (isVisited) return console.log("user already visited");
+    if (isVisited) return;
 
     await InteractionModel.create({
       question: questionId,

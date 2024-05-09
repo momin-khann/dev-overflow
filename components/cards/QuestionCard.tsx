@@ -6,6 +6,7 @@ import { getTimestamp } from "@/helpers/sanitizer";
 
 interface OwnProps {
   _id: string;
+  clerkId?: string;
   title: string;
   tags: {
     _id: string;
@@ -26,6 +27,7 @@ type Props = OwnProps;
 
 const QuestionCard: FunctionComponent<Props> = ({
   _id,
+  clerkId,
   title,
   tags,
   author,

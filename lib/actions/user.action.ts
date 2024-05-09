@@ -10,6 +10,7 @@ import {
 import { revalidatePath } from "next/cache";
 import { QuestionModel } from "@/models/question.model";
 import { TagModel } from "@/models/tag.model";
+import { AnswerModel } from "@/models/answer.model";
 
 const getAllUsers = asyncHandler(async () => {
   // get all users
@@ -128,6 +129,35 @@ const getSavedQuestions = asyncHandler(async (userId: string) => {
   return questions.saved;
 });
 
+const getUserQuestions = asyncHandler(async (params: any) => {
+  const { userId } = params;
+
+  const totalQuestions = await QuestionModel.countDocuments({ author: userId });
+
+  const questions = await QuestionModel.find({ author: userId })
+    .populate("tags", "_id name")
+    .populate("author", "_id clerkId name picture");
+  // .sort({ views: -1, upvotes: -1 });
+
+  console.log(questions);
+
+  return { totalQuestions, questions };
+});
+
+const getUserAnswers = asyncHandler(async (params: any) => {
+  const { userId } = params;
+
+  const totalAnswers = await AnswerModel.countDocuments({ author: userId });
+
+  const answers = await AnswerModel.find({ author: userId })
+    .sort({ createdAt: -1 })
+    .populate("question", "_id title")
+    .populate("author", "_id clerkId name picture")
+    .exec();
+
+  return { totalAnswers, answers };
+});
+
 export {
   getAllUsers,
   getUserById,
@@ -136,4 +166,6 @@ export {
   updateUser,
   saveQuestion,
   getSavedQuestions,
+  getUserQuestions,
+  getUserAnswers,
 };

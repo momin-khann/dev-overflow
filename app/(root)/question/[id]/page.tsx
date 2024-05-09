@@ -50,7 +50,7 @@ const page: FunctionComponent<Props> = async ({ params }) => {
               downvotes={question.downvotes?.length ?? 0}
               hasUpVoted={question.upvotes?.includes(mongoUserId) ?? false}
               hasDownVoted={question.downvotes?.includes(mongoUserId) ?? false}
-              hasSaved={user.saved?.includes(question._id.toString()) ?? false}
+              hasSaved={user?.saved?.includes(question._id.toString()) ?? false}
             />
           </div>
         </div>

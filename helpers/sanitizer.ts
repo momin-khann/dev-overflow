@@ -69,3 +69,13 @@ export const caplitalizeSentence = (sentence: string) => {
 
   return firstChar + sentence.slice(1);
 };
+
+export const getJoinedDate = (date: Date) => {
+  const month = date.toLocaleString("default", {
+    day: "numeric",
+    month: "long",
+  });
+  const year = date.getFullYear();
+
+  return `${month}, ${year}`;
+};
