@@ -2,7 +2,7 @@
 
 import React, { FunctionComponent } from "react";
 import Image from "next/image";
-import { useTheme } from "@/context/ThemeProvider";
+import { useTheme } from "next-themes";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,12 +12,12 @@ import {
 import { themes } from "@/constants";
 
 const Theme: FunctionComponent = () => {
-  const { mode, setMode } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   return (
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:bg-light-900 data-[state=open]:bg-light-900 dark:focus:bg-dark-200 dark:data-[state=open]:bg-dark-200 outline-none">
-          {mode === "light" ? (
+          {resolvedTheme === "light" ? (
             <Image
               src="/assets/icons/sun.svg"
               width={20}
@@ -39,13 +39,21 @@ const Theme: FunctionComponent = () => {
           {themes.map((item) => (
             <DropdownMenuCheckboxItem
               key={item.value}
-              onClick={() => setMode(item.value)}
-              checked={item.value === mode}
+              onClick={() => setTheme(item.value)}
+              checked={item.value === resolvedTheme}
               className={
                 "cursor-pointer hover:opacity-80 dark:focus:bg-dark-400 text-dark100_light900"
               }
             >
-              {item.label}
+              <div className={"flex gap-2"}>
+                <Image
+                  src={item.icon}
+                  width={16}
+                  height={16}
+                  alt={item.value}
+                />
+                <span>{item.label} </span>
+              </div>
             </DropdownMenuCheckboxItem>
           ))}
         </DropdownMenuContent>
