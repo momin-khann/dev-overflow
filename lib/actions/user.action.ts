@@ -49,8 +49,8 @@ const createUser = asyncHandler(async (params: CreateUserParams) => {
 
 const updateUser = asyncHandler(async (params: UpdateUserParams) => {
   // update user to db
-  const { clerkId, updateData, path } = params;
-  const user = await UserModel.findOneAndUpdate({ clerkId }, updateData, {
+  const { userId, updateData, path } = params;
+  const user = await UserModel.findByIdAndUpdate(userId, updateData, {
     new: true,
   });
 

@@ -170,6 +170,16 @@ const deleteQuestion = asyncHandler(async (params: DeleteQuestionParams) => {
   revalidatePath(path!);
 });
 
+const getHotQuestions = asyncHandler(async () => {
+  const hotQuestions = await QuestionModel.find({})
+    .sort({ views: -1, upvotes: -1 })
+    .limit(5);
+
+  if (!hotQuestions) throw new Error("No Questions Exits.");
+
+  return hotQuestions;
+});
+
 export {
   getQuestions,
   createQuestion,
@@ -178,4 +188,5 @@ export {
   downvoteQuestion,
   editQuestion,
   deleteQuestion,
+  getHotQuestions,
 };

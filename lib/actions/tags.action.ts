@@ -43,3 +43,17 @@ export const getQuestionsByTagId = asyncHandler(async (tagId: string) => {
 
   return questions;
 });
+
+export const getHotTags = asyncHandler(async () => {
+  const hotTags = await TagModel.aggregate([
+    {
+      $project: { _id: 0, name: 1, totalQuestions: { $size: "$questions" } },
+    },
+    { $sort: { totalQuestions: -1 } },
+    { $limit: 5 },
+  ]);
+
+  if (!hotTags) throw new Error("No Tag Exist.");
+
+  return hotTags;
+});
