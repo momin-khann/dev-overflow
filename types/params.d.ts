@@ -9,6 +9,13 @@ export interface CreateQuestionParams {
   path: string;
 }
 
+export interface EditQuestionParams {
+  questionId: string;
+  title: string;
+  description: string;
+  path: string;
+}
+
 export interface CreateAnswerParams {
   clerkId?: string;
   _id?: string;
@@ -47,7 +54,7 @@ export interface CreateUserParams {
 }
 
 export interface UpdateUserParams {
-  clerkId: string;
+  userId: string;
   updateData: Partial<IUser>;
   path: string;
 }
@@ -77,4 +84,14 @@ export interface SaveQuestionParams {
 export interface ViewQuestionParams {
   questionId: string;
   userId: string | undefined;
+}
+
+export interface DeleteAnswerParams {
+  answerId: string;
+  path?: string;
+}
+
+export interface DeleteQuestionParams {
+  questionId: string;
+  path?: string;
 }

@@ -5,11 +5,13 @@ import { AnswerModel } from "@/models/answer.model";
 import {
   AnswerVoteParams,
   CreateAnswerParams,
+  DeleteAnswerParams,
   UpdateAnswerParams,
 } from "@/types/params";
 import { UserModel } from "@/models/user.model";
 import { QuestionModel } from "@/models/question.model";
 import { revalidatePath } from "next/cache";
+import { InteractionModel } from "@/models/interaction.model";
 
 export const getAnswers = asyncHandler(async (questionId: string) => {
   const answers = await AnswerModel.find({ question: questionId })
@@ -46,14 +48,6 @@ export const updateAnswer = asyncHandler(async (params: UpdateAnswerParams) => {
   });
 
   if (!answer) throw new Error("error updating answer.");
-
-  return answer;
-});
-
-export const deleteAnswer = asyncHandler(async (id: string) => {
-  const answer = await AnswerModel.findByIdAndDelete(id);
-
-  if (!answer) throw new Error("error deleting answer.");
 
   return answer;
 });
@@ -112,6 +106,21 @@ export const downvoteAnswer = asyncHandler(async (params: AnswerVoteParams) => {
   });
 
   if (!answer) throw new Error("Error fetching answer");
+
+  revalidatePath(path!);
+});
+
+export const deleteAnswer = asyncHandler(async (params: DeleteAnswerParams) => {
+  const { answerId, path } = params;
+
+  const answer = await AnswerModel.findById(answerId);
+
+  await InteractionModel.deleteMany({ answer: answerId });
+  await QuestionModel.updateMany(
+    { _id: answer.question },
+    { $pull: { answers: answerId } },
+  );
+  await AnswerModel.deleteMany({ _id: answerId });
 
   revalidatePath(path!);
 });

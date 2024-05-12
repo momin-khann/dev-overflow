@@ -1,16 +1,18 @@
 import React from "react";
 import Question from "@/components/forms/Question";
-import { auth } from "@clerk/nextjs/server";
+import { getMongoUserId } from "@/helpers/getMongoUser";
 
-const AskQuestion = () => {
-  const { userId } = auth();
+const AskQuestion = async () => {
+  const mongoUserId = await getMongoUserId();
+
+  if (!mongoUserId) return <div>User not Logged In.</div>;
 
   return (
     <div>
       <h1 className="h1-bold text-dark100_light900">Ask a question</h1>
 
       <div className={"mt-8"}>
-        <Question clerkId={userId!} />
+        <Question mongoUserId={mongoUserId} />
       </div>
     </div>
   );

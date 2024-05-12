@@ -2,6 +2,8 @@ import { auth } from "@clerk/nextjs/server";
 import { getUserById, getUserId } from "@/lib/actions/user.action";
 
 export const getMongoUserId = async () => {
+  // const { userId: clerkId } =  getAuth();
+
   const { userId: clerkId } = auth();
 
   if (!clerkId) return null;

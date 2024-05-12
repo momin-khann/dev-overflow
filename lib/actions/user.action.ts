@@ -10,6 +10,7 @@ import {
 import { revalidatePath } from "next/cache";
 import { QuestionModel } from "@/models/question.model";
 import { TagModel } from "@/models/tag.model";
+import { AnswerModel } from "@/models/answer.model";
 
 const getAllUsers = asyncHandler(async () => {
   // get all users
@@ -48,8 +49,8 @@ const createUser = asyncHandler(async (params: CreateUserParams) => {
 
 const updateUser = asyncHandler(async (params: UpdateUserParams) => {
   // update user to db
-  const { clerkId, updateData, path } = params;
-  const user = await UserModel.findOneAndUpdate({ clerkId }, updateData, {
+  const { userId, updateData, path } = params;
+  const user = await UserModel.findByIdAndUpdate(userId, updateData, {
     new: true,
   });
 
@@ -128,6 +129,33 @@ const getSavedQuestions = asyncHandler(async (userId: string) => {
   return questions.saved;
 });
 
+const getUserQuestions = asyncHandler(async (params: any) => {
+  const { userId } = params;
+
+  const totalQuestions = await QuestionModel.countDocuments({ author: userId });
+
+  const questions = await QuestionModel.find({ author: userId })
+    .populate({ path: "author", model: UserModel })
+    .populate("tags", "_id name")
+    .sort({ views: -1, upvotes: -1 });
+
+  return { totalQuestions, questions };
+});
+
+const getUserAnswers = asyncHandler(async (params: any) => {
+  const { userId } = params;
+
+  const totalAnswers = await AnswerModel.countDocuments({ author: userId });
+
+  const answers = await AnswerModel.find({ author: userId })
+    .sort({ upvotes: -1 })
+    .populate("question", "_id title")
+    .populate("author", "_id clerkId name picture")
+    .exec();
+
+  return { totalAnswers, answers };
+});
+
 export {
   getAllUsers,
   getUserById,
@@ -136,4 +164,6 @@ export {
   updateUser,
   saveQuestion,
   getSavedQuestions,
+  getUserQuestions,
+  getUserAnswers,
 };
