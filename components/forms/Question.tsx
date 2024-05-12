@@ -41,14 +41,14 @@ const Question: FunctionComponent<Props> = ({
   const router = useRouter();
 
   const parsedQuestion = JSON.parse(questionDetails);
-  const initialTags = parsedQuestion.tags.map((tag: any) => tag.name);
+  const initialTags = parsedQuestion?.tags?.map((tag: any) => tag.name);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof questionSchema>>({
     resolver: zodResolver(questionSchema),
     defaultValues: {
-      title: parsedQuestion.title || "",
-      description: parsedQuestion.description || "",
+      title: parsedQuestion?.title || "",
+      description: parsedQuestion?.description || "",
       tags: initialTags || [],
     },
   });
@@ -201,7 +201,7 @@ const Question: FunctionComponent<Props> = ({
                     <RichTextEditor
                       ref={editorRef}
                       field={field}
-                      initialValue={parsedQuestion.description || ""}
+                      initialValue={parsedQuestion?.description || ""}
                     />
                   </FormControl>
                   <FormDescription
