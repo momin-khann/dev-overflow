@@ -20,44 +20,63 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { getUserById } from "@/lib/actions/user.action";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import RichTextEditor from "@/components/forms/RichTextEditor";
-
-let type: string = "create";
+import { QuestionType } from "@/types";
+import { useRouter } from "next/navigation";
+import { getMongoUserId } from "@/helpers/getMongoUser";
 
 interface Props {
-  clerkId: string;
+  mongoUserId?: string;
+  type?: string;
+  questionDetails?: any;
 }
-const Question: FunctionComponent<Props> = ({ clerkId }) => {
+const Question: FunctionComponent<Props> = ({
+  questionDetails,
+  mongoUserId,
+  type,
+}) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef(null);
+  const router = useRouter();
+
+  const parsedQuestion = JSON.parse(questionDetails);
+  const initialTags = parsedQuestion.tags.map((tag: any) => tag.name);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof questionSchema>>({
     resolver: zodResolver(questionSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      tags: [],
+      title: parsedQuestion.title || "",
+      description: parsedQuestion.description || "",
+      tags: initialTags || [],
     },
   });
 
   // 2. Define a submit handler.
   async function onSubmit(formData: z.infer<typeof questionSchema>) {
     setIsSubmitting(true);
-
     try {
-      const { _id } = await getUserById(clerkId);
+      if (type === "edit") {
+        await editQuestion({
+          questionId: parsedQuestion._id,
+          title: formData.title,
+          description: formData.description,
+          path: "/question/${parsedQuestion._id}",
+        });
 
-      // make an async call to your API
-      // containing all form data
-      await createQuestion({
-        title: formData.title,
-        description: formData.description,
-        author: _id,
-        tags: formData.tags,
-        path: "/",
-      });
+        router.push(`/question/${parsedQuestion._id}`);
+      } else {
+        await createQuestion({
+          title: formData.title,
+          description: formData.description,
+          author: mongoUserId,
+          tags: formData.tags,
+          path: "/",
+        });
+
+        router.push("/");
+      }
 
       // pop-up with sweet alert and then navigate to home page.
       toast.success("Question created successfully.");
@@ -179,7 +198,11 @@ const Question: FunctionComponent<Props> = ({ clerkId }) => {
                     <span className={"text-primary-500"}>*</span>
                   </FormLabel>
                   <FormControl className={"mt-3.5"}>
-                    <RichTextEditor ref={editorRef} field={field} />
+                    <RichTextEditor
+                      ref={editorRef}
+                      field={field}
+                      initialValue={parsedQuestion.description || ""}
+                    />
                   </FormControl>
                   <FormDescription
                     className={"body-regular mt-2.5 text-light-500"}
@@ -206,6 +229,7 @@ const Question: FunctionComponent<Props> = ({ clerkId }) => {
                   </FormLabel>
                   <FormControl className={"mt-3.5"}>
                     <Input
+                      disabled={type === "edit"}
                       className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                       placeholder={"Add tags..."}
                       onKeyDown={(event) => handleKeyDownPress(event, field)}

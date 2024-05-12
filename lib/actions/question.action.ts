@@ -1,11 +1,18 @@
 "use server";
 
-import { CreateQuestionParams, QuestionVoteParams } from "@/types/params";
+import {
+  CreateQuestionParams,
+  DeleteQuestionParams,
+  EditQuestionParams,
+  QuestionVoteParams,
+} from "@/types/params";
 import { QuestionModel } from "@/models/question.model";
 import { TagModel } from "@/models/tag.model";
 import { revalidatePath } from "next/cache";
 import { asyncHandler } from "@/helpers/asyncHandler";
 import { UserModel } from "@/models/user.model";
+import { AnswerModel } from "@/models/answer.model";
+import { InteractionModel } from "@/models/interaction.model";
 
 const getQuestions = asyncHandler(async () => {
   // get all questions
@@ -132,10 +139,43 @@ const downvoteQuestion = asyncHandler(async (params: QuestionVoteParams) => {
   revalidatePath(`/question/${questionId}`);
 });
 
+const editQuestion = asyncHandler(async (params: EditQuestionParams) => {
+  const { questionId, title, description, path } = params;
+
+  const question = await QuestionModel.findById(questionId).populate("tags");
+
+  if (!question) {
+    throw new Error("Question not found");
+  }
+
+  question.title = title;
+  question.description = description;
+
+  await question.save();
+
+  revalidatePath(path);
+});
+
+const deleteQuestion = asyncHandler(async (params: DeleteQuestionParams) => {
+  const { questionId, path } = params;
+
+  await AnswerModel.deleteMany({ question: questionId });
+  await InteractionModel.deleteMany({ question: questionId });
+  await TagModel.updateMany(
+    { questions: questionId },
+    { $pull: { questions: questionId } },
+  );
+  await QuestionModel.findByIdAndDelete(questionId);
+
+  revalidatePath(path!);
+});
+
 export {
   getQuestions,
   createQuestion,
   getQuestionById,
   upvoteQuestion,
   downvoteQuestion,
+  editQuestion,
+  deleteQuestion,
 };

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SignedIn } from "@clerk/nextjs";
 import ProfileLink from "@/components/shared/ProfileLink";
-import { getJoinedDate, getTimestamp } from "@/helpers/sanitizer";
+import { getJoinedDate } from "@/helpers/sanitizer";
 import { auth } from "@clerk/nextjs/server";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Stats from "@/components/shared/Stats";
@@ -96,7 +96,10 @@ const Page = async () => {
               clerkId={clerkId}
             />
           </TabsContent>
-          <TabsContent value="answers" className="flex w-full flex-col gap-6">
+          <TabsContent
+            value="answers"
+            className="flex w-full flex-col gap-6 mt-6"
+          >
             <AnswersTab
               // searchParams={searchParams}
               userId={user._id}

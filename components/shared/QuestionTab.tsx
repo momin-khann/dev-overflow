@@ -1,5 +1,5 @@
 import { getUserQuestions } from "@/lib/actions/user.action";
-import { QuestionType, SearchParamsProps } from "@/types";
+import { QuestionType } from "@/types";
 import React from "react";
 import QuestionCard from "../cards/QuestionCard";
 
@@ -16,7 +16,7 @@ const QuestionTab = async ({ userId, clerkId }: Props) => {
       {result.questions.map((question: QuestionType) => (
         <QuestionCard
           key={question._id}
-          _id={question._id}
+          _id={question._id.toString()}
           clerkId={clerkId!}
           title={question.title}
           tags={question.tags}

@@ -21,8 +21,6 @@ export const getAllTags = asyncHandler(async () => {
 
   if (!tags) throw new Error("Tags not found.");
 
-  console.log(tags);
-
   return tags;
 });
 

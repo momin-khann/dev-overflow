@@ -135,11 +135,9 @@ const getUserQuestions = asyncHandler(async (params: any) => {
   const totalQuestions = await QuestionModel.countDocuments({ author: userId });
 
   const questions = await QuestionModel.find({ author: userId })
+    .populate({ path: "author", model: UserModel })
     .populate("tags", "_id name")
-    .populate("author", "_id clerkId name picture");
-  // .sort({ views: -1, upvotes: -1 });
-
-  console.log(questions);
+    .sort({ views: -1, upvotes: -1 });
 
   return { totalQuestions, questions };
 });
@@ -150,7 +148,7 @@ const getUserAnswers = asyncHandler(async (params: any) => {
   const totalAnswers = await AnswerModel.countDocuments({ author: userId });
 
   const answers = await AnswerModel.find({ author: userId })
-    .sort({ createdAt: -1 })
+    .sort({ upvotes: -1 })
     .populate("question", "_id title")
     .populate("author", "_id clerkId name picture")
     .exec();

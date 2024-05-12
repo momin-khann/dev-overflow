@@ -1,4 +1,4 @@
-import { AnswerType, SearchParamsProps } from "@/types";
+import { AnswerType } from "@/types";
 import AnswerCard from "../cards/AnswerCard";
 import { getUserAnswers } from "@/lib/actions/user.action";
 
