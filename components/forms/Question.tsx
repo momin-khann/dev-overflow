@@ -40,7 +40,7 @@ const Question: FunctionComponent<Props> = ({
   const editorRef = useRef(null);
   const router = useRouter();
 
-  const parsedQuestion = JSON.parse(questionDetails);
+  const parsedQuestion = questionDetails ? JSON.parse(questionDetails) : "";
   const initialTags = parsedQuestion?.tags?.map((tag: any) => tag.name);
 
   // 1. Define your form.
