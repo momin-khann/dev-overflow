@@ -95,3 +95,8 @@ export interface DeleteQuestionParams {
   questionId: string;
   path?: string;
 }
+
+export interface SearchQueryParams {
+  userId?: string;
+  searchQuery: string;
+}

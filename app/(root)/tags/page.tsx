@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 import Filter from "@/components/shared/Filter";
 import { tagFilters } from "@/data/filters";
-import { TagType } from "@/types";
+import { SearchParamsProps, TagType } from "@/types";
 import { getAllTags } from "@/lib/actions/tags.action";
 import NoResult from "@/components/shared/NoResult";
 import { Badge } from "@/components/ui/badge";
 
-const page: FunctionComponent = async () => {
-  const tags = await getAllTags();
+const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
+  const tags = await getAllTags({ searchQuery: searchParams?.q });
 
   return (
     <main>

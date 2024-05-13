@@ -4,6 +4,7 @@ import { asyncHandler } from "@/helpers/asyncHandler";
 import { UserModel } from "@/models/user.model";
 import { TagModel } from "@/models/tag.model";
 import { QuestionModel } from "@/models/question.model";
+import { SearchQueryParams } from "@/types/params";
 
 export const getTopInteractedTags = asyncHandler(async (userId: string) => {
   const user = await UserModel.findById(userId);
@@ -16,13 +17,17 @@ export const getTopInteractedTags = asyncHandler(async (userId: string) => {
   ];
 });
 
-export const getAllTags = asyncHandler(async () => {
-  const tags = await TagModel.find({});
+export const getAllTags = asyncHandler(
+  async ({ searchQuery }: SearchQueryParams) => {
+    const tags = await TagModel.find({
+      name: { $regex: new RegExp(searchQuery, "i") },
+    });
 
-  if (!tags) throw new Error("Tags not found.");
+    if (!tags) throw new Error("Tags not found.");
 
-  return tags;
-});
+    return tags;
+  },
+);
 
 export const getQuestionsByTagId = asyncHandler(async (tagId: string) => {
   if (!tagId) throw new Error("no tag id");

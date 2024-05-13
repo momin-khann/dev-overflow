@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import LocalSearch from "@/components/shared/search/LocalSearch";
@@ -6,10 +6,10 @@ import Filter from "@/components/shared/Filter";
 import { userFilters } from "@/data/filters";
 import UserCard from "@/components/cards/UserCard";
 import { getAllUsers } from "@/lib/actions/user.action";
-import { UserType } from "@/types";
+import { SearchParamsProps, UserType } from "@/types";
 
-const page: FunctionComponent = async () => {
-  const users = await getAllUsers();
+const page = async ({ searchParams }: SearchParamsProps) => {
+  const users = await getAllUsers({ searchQuery: searchParams?.q });
 
   return (
     <main>
@@ -41,7 +41,7 @@ const page: FunctionComponent = async () => {
 
       {/* All Users */}
       <section className="mt-12 flex flex-wrap gap-4">
-        {users.length > 0 ? (
+        {users?.length > 0 ? (
           users.map((user: UserType) => <UserCard key={user._id} user={user} />)
         ) : (
           <div className="paragraph-regular text-dark200_light800 mx-auto max-w-4xl text-center">
