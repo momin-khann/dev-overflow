@@ -3,7 +3,7 @@ import Link from "next/link";
 import RenderTag from "@/components/shared/RenderTag";
 import Metric from "@/components/shared/Metric";
 import { getTimestamp } from "@/helpers/sanitizer";
-import { UserType } from "@/types";
+import { TagType, UserType } from "@/types";
 import { SignedIn } from "@clerk/nextjs";
 import EditDeleteButtons from "@/components/shared/EditDeleteButtons";
 
@@ -61,7 +61,7 @@ const QuestionCard: FunctionComponent<Props> = ({
       </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
-        {tags.map((tag) => (
+        {tags.map((tag: TagType) => (
           <RenderTag key={tag._id} _id={tag._id} name={tag.name} />
         ))}
       </div>

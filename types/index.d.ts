@@ -33,6 +33,7 @@ export interface UserType {
   picture: string;
   name: string;
   username: string;
+  email?: string;
 }
 
 export interface TagType {

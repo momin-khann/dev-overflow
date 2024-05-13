@@ -34,7 +34,7 @@ const UserCard: FunctionComponent<Props> = async ({ user }) => {
             href={`/profile/${user.clerkId}`}
             className="body-regular text-dark500_light500 mt-2"
           >
-            @{user.username ? user.username : user.name}
+            @{user.username ?? user.email}
           </Link>
         </div>
 
