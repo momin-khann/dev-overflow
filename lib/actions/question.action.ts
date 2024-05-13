@@ -5,6 +5,7 @@ import {
   DeleteQuestionParams,
   EditQuestionParams,
   QuestionVoteParams,
+  SearchQueryParams,
 } from "@/types/params";
 import { QuestionModel } from "@/models/question.model";
 import { TagModel } from "@/models/tag.model";
@@ -14,20 +15,27 @@ import { UserModel } from "@/models/user.model";
 import { AnswerModel } from "@/models/answer.model";
 import { InteractionModel } from "@/models/interaction.model";
 
-const getQuestions = asyncHandler(async () => {
-  // get all questions
-  const questions = await QuestionModel.find({})
-    .populate({
-      path: "tags",
-      model: TagModel,
+const getQuestions = asyncHandler(
+  async ({ searchQuery }: SearchQueryParams) => {
+    // get all questions
+    const questions = await QuestionModel.find({
+      $or: [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+        { description: { $regex: new RegExp(searchQuery, "i") } },
+      ],
     })
-    .populate({ path: "author", model: UserModel })
-    .sort({ createdAt: -1 });
+      .populate({
+        path: "tags",
+        model: TagModel,
+      })
+      .populate({ path: "author", model: UserModel })
+      .sort({ createdAt: -1 });
 
-  if (!questions) throw new Error("error fetching questions");
+    if (!questions) throw new Error("error fetching questions");
 
-  return questions;
-});
+    return questions;
+  },
+);
 
 const createQuestion = asyncHandler(async (params: CreateQuestionParams) => {
   const { title, description, tags, path, author } = params;

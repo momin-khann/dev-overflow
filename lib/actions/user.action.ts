@@ -5,6 +5,7 @@ import { asyncHandler } from "@/helpers/asyncHandler";
 import {
   CreateUserParams,
   SaveQuestionParams,
+  SearchQueryParams,
   UpdateUserParams,
 } from "@/types/params";
 import { revalidatePath } from "next/cache";
@@ -12,9 +13,14 @@ import { QuestionModel } from "@/models/question.model";
 import { TagModel } from "@/models/tag.model";
 import { AnswerModel } from "@/models/answer.model";
 
-const getAllUsers = asyncHandler(async () => {
+const getAllUsers = asyncHandler(async ({ searchQuery }: SearchQueryParams) => {
   // get all users
-  const users = await UserModel.find({});
+  const users = await UserModel.find({
+    $or: [
+      { name: { $regex: new RegExp(searchQuery, "i") } },
+      { username: { $regex: new RegExp(searchQuery, "i") } },
+    ],
+  });
 
   if (!users) throw new Error("error fetching users.");
 
@@ -101,7 +107,9 @@ const saveQuestion = asyncHandler(async (params: SaveQuestionParams) => {
   revalidatePath(path!);
 });
 
-const getSavedQuestions = asyncHandler(async (userId: string) => {
+const getSavedQuestions = asyncHandler(async (params: SearchQueryParams) => {
+  const { userId, searchQuery } = params;
+
   if (!userId) throw new Error("user not logged in.");
 
   const questions = await UserModel.findById(userId)
@@ -119,6 +127,9 @@ const getSavedQuestions = asyncHandler(async (userId: string) => {
           model: TagModel,
         },
       ],
+      match: {
+        title: { $regex: new RegExp(searchQuery, "i") },
+      },
       options: {
         sort: { createdAt: -1 },
       },

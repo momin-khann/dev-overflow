@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { QuestionType } from "@/types";
+import { QuestionType, SearchParamsProps } from "@/types";
 import QuestionCard from "@/components/cards/QuestionCard";
 import NoResult from "@/components/shared/NoResult";
 import { getSavedQuestions } from "@/lib/actions/user.action";
@@ -8,9 +8,12 @@ import Filter from "@/components/shared/Filter";
 import { questionFilters } from "@/data/filters";
 import LocalSearchbar from "@/components/shared/search/LocalSearch";
 
-const page: FunctionComponent = async () => {
+const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
   const userId = await getMongoUserId();
-  const savedQuestions = await getSavedQuestions(userId);
+  const savedQuestions = await getSavedQuestions({
+    userId,
+    searchQuery: searchParams?.q,
+  });
 
   return (
     <main>

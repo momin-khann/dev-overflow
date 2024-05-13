@@ -2,7 +2,9 @@
 
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface CustomInputProps {
   route?: string;
@@ -19,6 +21,28 @@ const LocalSearchbar = ({
   placeholder,
   otherClasses,
 }: CustomInputProps) => {
+  // states
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debounceValue, setDebounceValue] = useDebounce(searchTerm, 4000);
+  const params = new URLSearchParams();
+
+  useEffect(() => {
+    debounceValue ? params.set("q", debounceValue) : params.delete("q");
+
+    replace(`?${params}`);
+  }, [debounceValue]);
+
+  function handleSearch(value: string) {
+    if (!value) {
+      setSearchTerm("");
+      setDebounceValue("");
+    }
+
+    setSearchTerm(value);
+  }
+
   return (
     <div
       className={`background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-[10px] px-4 ${otherClasses}`}
@@ -36,8 +60,8 @@ const LocalSearchbar = ({
       <Input
         type="text"
         placeholder={placeholder}
-        // value=""
-        // onChange={() => {}}
+        defaultValue={searchParams.get("q")?.toString()}
+        onChange={(e) => handleSearch(e.target.value)}
         className="paragraph-regular no-focus placeholder background-light800_darkgradient border-none shadow-none outline-none"
       />
 
