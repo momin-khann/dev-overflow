@@ -38,7 +38,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
         <Filter
           filters={homePageFilters}
           otherClasses={"min-h-[56px] sm:min-w-[170px]"}
-          containerClasses={"hidden md:flex"}
+          containerClasses={"flex sm:hidden lg:flex"}
         />
       </div>
 
