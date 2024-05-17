@@ -12,20 +12,42 @@ import { revalidatePath } from "next/cache";
 import { QuestionModel } from "@/models/question.model";
 import { TagModel } from "@/models/tag.model";
 import { AnswerModel } from "@/models/answer.model";
+import { FilterQuery } from "mongoose";
 
-const getAllUsers = asyncHandler(async ({ searchQuery }: SearchQueryParams) => {
-  // get all users
-  const users = await UserModel.find({
-    $or: [
-      { name: { $regex: new RegExp(searchQuery, "i") } },
-      { username: { $regex: new RegExp(searchQuery, "i") } },
-    ],
-  });
+const getAllUsers = asyncHandler(
+  async ({ searchQuery, filter }: SearchQueryParams) => {
+    let query: FilterQuery<typeof UserModel> = {};
+    let sortByFilter = {};
 
-  if (!users) throw new Error("error fetching users.");
+    if (searchQuery) {
+      query.$or = [
+        { name: { $regex: new RegExp(searchQuery, "i") } },
+        { username: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
 
-  return users;
-});
+    switch (filter) {
+      case "new_users":
+        sortByFilter = { joinedAt: -1 };
+        break;
+      case "old_users":
+        sortByFilter = { joinedAt: 1 };
+        break;
+      case "top_contributors":
+        sortByFilter = { reputation: -1 };
+        break;
+      default:
+        break;
+    }
+
+    // get all users
+    const users = await UserModel.find(query).sort(sortByFilter);
+
+    if (!users) throw new Error("error fetching users.");
+
+    return users;
+  },
+);
 
 const getUserById = asyncHandler(async (clerkId: string) => {
   // get single users
@@ -108,9 +130,39 @@ const saveQuestion = asyncHandler(async (params: SaveQuestionParams) => {
 });
 
 const getSavedQuestions = asyncHandler(async (params: SearchQueryParams) => {
-  const { userId, searchQuery } = params;
+  const { userId, searchQuery, filter } = params;
 
   if (!userId) throw new Error("user not logged in.");
+
+  let query: FilterQuery<typeof UserModel> = {};
+  let sortByFilter = {};
+
+  if (searchQuery) {
+    query.$or = [
+      { title: { $regex: new RegExp(searchQuery, "i") } },
+      { description: { $regex: new RegExp(searchQuery, "i") } },
+    ];
+  }
+
+  switch (filter) {
+    case "most_recent":
+      sortByFilter = { createdAt: -1 };
+      break;
+    case "oldest":
+      sortByFilter = { createdAt: 1 };
+      break;
+    case "most_voted":
+      sortByFilter = { upvotes: -1 };
+      break;
+    case "most_viewed":
+      sortByFilter = { views: -1 };
+      break;
+    case "most_answered":
+      sortByFilter = { answers: -1 };
+      break;
+    default:
+      break;
+  }
 
   const questions = await UserModel.findById(userId)
     .select("saved")
@@ -127,11 +179,9 @@ const getSavedQuestions = asyncHandler(async (params: SearchQueryParams) => {
           model: TagModel,
         },
       ],
-      match: {
-        title: { $regex: new RegExp(searchQuery, "i") },
-      },
+      match: query,
       options: {
-        sort: { createdAt: -1 },
+        sort: sortByFilter,
       },
     });
 

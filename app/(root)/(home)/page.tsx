@@ -12,6 +12,7 @@ import { QuestionType, SearchParamsProps } from "@/types";
 export default async function Home({ searchParams }: SearchParamsProps) {
   const questions: Array<QuestionType> = await getQuestions({
     searchQuery: searchParams?.q,
+    filter: searchParams?.filter,
   });
 
   return (
@@ -38,7 +39,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
         <Filter
           filters={homePageFilters}
           otherClasses={"min-h-[56px] sm:min-w-[170px]"}
-          containerClasses={"flex sm:hidden lg:flex"}
+          containerClasses={"flex sm:hidden"}
         />
       </div>
 

@@ -99,4 +99,6 @@ export interface DeleteQuestionParams {
 export interface SearchQueryParams {
   userId?: string;
   searchQuery: string;
+  filter: string;
+  // page: string;
 }

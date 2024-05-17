@@ -14,22 +14,42 @@ import { asyncHandler } from "@/helpers/asyncHandler";
 import { UserModel } from "@/models/user.model";
 import { AnswerModel } from "@/models/answer.model";
 import { InteractionModel } from "@/models/interaction.model";
+import { FilterQuery } from "mongoose";
 
 const getQuestions = asyncHandler(
-  async ({ searchQuery }: SearchQueryParams) => {
-    // get all questions
-    const questions = await QuestionModel.find({
-      $or: [
+  async ({ searchQuery, filter }: SearchQueryParams) => {
+    let query: FilterQuery<typeof QuestionModel> = {};
+    let sortByFilter = {};
+
+    if (searchQuery) {
+      query.$or = [
         { title: { $regex: new RegExp(searchQuery, "i") } },
         { description: { $regex: new RegExp(searchQuery, "i") } },
-      ],
-    })
+      ];
+    }
+
+    switch (filter) {
+      case "newest":
+        sortByFilter = { createdAt: -1 };
+        break;
+      case "frequent":
+        sortByFilter = { views: -1 };
+        break;
+      case "unanswered":
+        query = { answers: { $size: 0 } };
+        break;
+      default:
+        break;
+    }
+
+    // get all questions
+    const questions = await QuestionModel.find(query)
       .populate({
         path: "tags",
         model: TagModel,
       })
       .populate({ path: "author", model: UserModel })
-      .sort({ createdAt: -1 });
+      .sort(sortByFilter);
 
     if (!questions) throw new Error("error fetching questions");
 
