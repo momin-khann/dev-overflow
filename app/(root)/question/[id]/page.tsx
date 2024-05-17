@@ -7,20 +7,20 @@ import { formatNumber, getTimestamp } from "@/helpers/sanitizer";
 import RenderTag from "@/components/shared/RenderTag";
 import ParseHTML from "@/components/shared/ParseHTML";
 import Answer from "@/components/forms/Answer";
-import { getMongoUser, getMongoUserId } from "@/helpers/getMongoUser";
+import { getMongoUser } from "@/helpers/getMongoUser";
 import AllAnswers from "@/components/shared/AllAnswers";
 import Votes from "@/components/shared/Votes";
 
 interface OwnProps {
   params: { id: string };
+  searchParams: { [key: string]: string | undefined };
 }
 
 type Props = OwnProps;
 
-const page: FunctionComponent<Props> = async ({ params }) => {
-  const mongoUserId = await getMongoUserId();
-  const question = await getQuestionById(params.id);
+const page: FunctionComponent<Props> = async ({ params, searchParams }) => {
   const user = await getMongoUser();
+  const question = await getQuestionById(params.id);
 
   return (
     <>
@@ -45,11 +45,15 @@ const page: FunctionComponent<Props> = async ({ params }) => {
             <Votes
               type={"question"}
               itemId={question._id.toString()}
-              userId={mongoUserId}
+              userId={user._id.toString()}
               upvotes={question.upvotes?.length ?? 0}
               downvotes={question.downvotes?.length ?? 0}
-              hasUpVoted={question.upvotes?.includes(mongoUserId) ?? false}
-              hasDownVoted={question.downvotes?.includes(mongoUserId) ?? false}
+              hasUpVoted={
+                question.upvotes?.includes(user._id.toString()) ?? false
+              }
+              hasDownVoted={
+                question.downvotes?.includes(user._id.toString()) ?? false
+              }
               hasSaved={user?.saved?.includes(question._id.toString()) ?? false}
             />
           </div>
@@ -100,12 +104,14 @@ const page: FunctionComponent<Props> = async ({ params }) => {
 
       <AllAnswers
         questionId={params.id}
-        mongoUserId={mongoUserId}
+        mongoUserId={user._id.toString()}
         totalAnswers={question.answers.length}
+        page={searchParams?.page}
+        filter={searchParams?.filter}
       />
 
       {/* Answers */}
-      <Answer mongoUserId={mongoUserId} questionId={params.id} />
+      <Answer mongoUserId={user._id.toString()} questionId={params.id} />
     </>
   );
 };

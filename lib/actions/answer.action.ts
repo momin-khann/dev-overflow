@@ -13,14 +13,33 @@ import { QuestionModel } from "@/models/question.model";
 import { revalidatePath } from "next/cache";
 import { InteractionModel } from "@/models/interaction.model";
 
-export const getAnswers = asyncHandler(async (questionId: string) => {
+export const getAnswers = asyncHandler(async ({ questionId, filter }: any) => {
+  let sortByFilter = {};
+
+  switch (filter) {
+    case "highest_upvotes":
+      sortByFilter = { upvotes: -1 };
+      break;
+    case "lowest_upvotes":
+      sortByFilter = { upvotes: 1 };
+      break;
+    case "recent":
+      sortByFilter = { createdAt: -1 };
+      break;
+    case "old":
+      sortByFilter = { createdAt: 1 };
+      break;
+    default:
+      break;
+  }
+
   const answers = await AnswerModel.find({ question: questionId })
     .populate({
       path: "author",
       model: UserModel,
       select: "_id name picture ",
     })
-    .sort({ createdAt: -1 });
+    .sort(sortByFilter);
 
   if (!answers) throw new Error("error fetching answers.");
 

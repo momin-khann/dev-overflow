@@ -25,13 +25,27 @@ const LocalSearchbar = ({
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [debounceValue, setDebounceValue] = useDebounce(searchTerm, 4000);
-  const params = new URLSearchParams();
+  const [debounceValue, setDebounceValue] = useDebounce(searchTerm, 400);
+  const params = new URLSearchParams(searchTerm);
+
+  let newPath: string = "";
 
   useEffect(() => {
-    debounceValue ? params.set("q", debounceValue) : params.delete("q");
+    const filter = searchParams.get("filter");
 
-    replace(`?${params}`);
+    if (debounceValue && filter) {
+      newPath = `q=${searchTerm}&filter=${filter}`;
+    } else if (!debounceValue && filter) {
+      params.delete("q");
+      newPath = `filter=${filter}`;
+    } else if (debounceValue && !filter) {
+      params.delete("filter");
+      newPath = `q=${searchTerm}`;
+    } else {
+      params.delete("q");
+    }
+
+    replace(`?${newPath}`, { scroll: false });
   }, [debounceValue]);
 
   function handleSearch(value: string) {

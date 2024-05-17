@@ -10,7 +10,10 @@ import NoResult from "@/components/shared/NoResult";
 import { Badge } from "@/components/ui/badge";
 
 const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
-  const tags = await getAllTags({ searchQuery: searchParams?.q });
+  const tags = await getAllTags({
+    searchQuery: searchParams?.q,
+    filter: searchParams?.filter,
+  });
 
   return (
     <main>

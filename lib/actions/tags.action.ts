@@ -5,6 +5,7 @@ import { UserModel } from "@/models/user.model";
 import { TagModel } from "@/models/tag.model";
 import { QuestionModel } from "@/models/question.model";
 import { SearchQueryParams } from "@/types/params";
+import { FilterQuery } from "mongoose";
 
 export const getTopInteractedTags = asyncHandler(async (userId: string) => {
   const user = await UserModel.findById(userId);
@@ -18,10 +19,34 @@ export const getTopInteractedTags = asyncHandler(async (userId: string) => {
 });
 
 export const getAllTags = asyncHandler(
-  async ({ searchQuery }: SearchQueryParams) => {
-    const tags = await TagModel.find({
-      name: { $regex: new RegExp(searchQuery, "i") },
-    });
+  async ({ searchQuery, filter }: SearchQueryParams) => {
+    let query: FilterQuery<typeof UserModel> = {};
+    let sortByFilter = {};
+
+    if (searchQuery) {
+      query = {
+        name: { $regex: new RegExp(searchQuery, "i") },
+      };
+    }
+
+    switch (filter) {
+      case "popular":
+        sortByFilter = { questions: -1 };
+        break;
+      case "recent":
+        sortByFilter = { createdOn: -1 };
+        break;
+      case "name":
+        sortByFilter = { name: 1 };
+        break;
+      case "old":
+        sortByFilter = { createdOn: 1 };
+        break;
+      default:
+        break;
+    }
+
+    const tags = await TagModel.find(query).sort(sortByFilter);
 
     if (!tags) throw new Error("Tags not found.");
 

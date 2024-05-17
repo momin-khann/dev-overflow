@@ -13,6 +13,7 @@ const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
   const savedQuestions = await getSavedQuestions({
     userId,
     searchQuery: searchParams?.q,
+    filter: searchParams?.filter,
   });
 
   return (
