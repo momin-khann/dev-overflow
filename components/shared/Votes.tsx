@@ -6,7 +6,7 @@ import { formatNumber } from "@/helpers/sanitizer";
 import { useVoting } from "@/hooks/useVoting";
 
 interface Props {
-  type: string;
+  type: "question" | "answer";
   itemId: string;
   userId: string;
   upvotes: number;
