@@ -1,19 +1,12 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import { formatNumber } from "@/helpers/sanitizer";
-import {
-  downvoteQuestion,
-  upvoteQuestion,
-} from "@/lib/actions/question.action";
-import { usePathname, useRouter } from "next/navigation";
-import { downvoteAnswer, upvoteAnswer } from "@/lib/actions/answer.action";
-import { saveQuestion } from "@/lib/actions/user.action";
-import { viewQuestion } from "@/lib/actions/interaction.action";
+import { useVoting } from "@/hooks/useVoting";
 
 interface Props {
-  type: string;
+  type: "question" | "answer";
   itemId: string;
   userId: string;
   upvotes: number;
@@ -33,61 +26,13 @@ const Votes = ({
   hasDownVoted,
   hasSaved,
 }: Props) => {
-  const path = usePathname();
-  const router = useRouter(); // for reload page view
-
-  useEffect(() => {
-    if (type === "question") {
-      viewQuestion({
-        questionId: itemId,
-        userId: userId ?? undefined,
-      });
-    }
-  }, [itemId, userId, path, router]);
-
-  async function handleVote(action: string) {
-    if (!userId) return;
-
-    if (action === "upvote" && type === "question") {
-      await upvoteQuestion({
-        questionId: itemId,
-        userId,
-        hasUpVoted,
-        hasDownVoted,
-      });
-    } else if (action === "upvote" && type === "answer") {
-      await upvoteAnswer({
-        answerId: itemId,
-        userId,
-        hasUpVoted,
-        hasDownVoted,
-        path,
-      });
-    } else if (action === "downvote" && type === "question") {
-      await downvoteQuestion({
-        questionId: itemId,
-        userId,
-        hasUpVoted,
-        hasDownVoted,
-      });
-    } else if (action === "downvote" && type === "answer") {
-      await downvoteAnswer({
-        answerId: itemId,
-        userId,
-        hasUpVoted,
-        hasDownVoted,
-        path,
-      });
-    }
-  }
-
-  async function handleSave() {
-    await saveQuestion({
-      userId,
-      questionId: itemId,
-      path,
-    });
-  }
+  const { handleSave, handleVote } = useVoting({
+    type,
+    itemId,
+    userId,
+    hasUpVoted,
+    hasDownVoted,
+  });
 
   return (
     <div className="flex gap-5">

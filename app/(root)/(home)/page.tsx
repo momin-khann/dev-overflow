@@ -8,6 +8,7 @@ import NoResult from "@/components/shared/NoResult";
 import QuestionCard from "@/components/cards/QuestionCard";
 import { getQuestions } from "@/lib/actions/question.action";
 import { QuestionType, SearchParamsProps } from "@/types";
+import Pagination from "@/components/shared/Pagination";
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   const questions: Array<QuestionType> = await getQuestions({
@@ -21,7 +22,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold">All Questions</h1>
 
-        <Link href="/ask-question" className="flex justify-end max-sm:w-full">
+        <Link href={"/ask-question"} className="flex justify-end max-sm:w-full">
           <Button className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900">
             Ask a Question
           </Button>
@@ -53,7 +54,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
             title={question.title}
             tags={question.tags}
             author={question.author}
-            upvotes={question.upvotes}
+            upvotes={question.upvotes.length}
             views={question.views}
             answers={question.answers}
             createdAt={question.createdAt}
@@ -67,6 +68,11 @@ export default async function Home({ searchParams }: SearchParamsProps) {
           linkTitle={"Ask a Question"}
         />
       )}
+
+      <Pagination
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
+        isNext={true}
+      />
     </main>
   );
 }

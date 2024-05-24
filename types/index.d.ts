@@ -11,7 +11,7 @@ export interface QuestionType {
   title: string;
   tags: { _id: string; name: string }[];
   author: { _id: string; name: string; picture: string };
-  upvotes: number;
+  upvotes: Array<string>;
   views: number;
   answers: object[];
   createdAt: Date;

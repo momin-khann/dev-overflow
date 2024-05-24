@@ -44,7 +44,7 @@ const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
               title={question.title}
               tags={question.tags}
               author={question.author}
-              upvotes={question.upvotes}
+              upvotes={question.upvotes.length}
               views={question.views}
               answers={question.answers}
               createdAt={question.createdAt}

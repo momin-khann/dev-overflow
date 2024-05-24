@@ -18,6 +18,10 @@ export const formatNumber = (num: number): string => {
   return num.toString();
 };
 
+const formatTime = (value: number, unit: string): string => {
+  return `${value} ${value > 1 ? `${unit}s ago` : `${unit} ago`}`;
+};
+
 export const getTimestamp = (createdAt: Date): string => {
   const now = new Date();
   const timeDifference = now.getTime() - createdAt.getTime();
@@ -32,28 +36,27 @@ export const getTimestamp = (createdAt: Date): string => {
 
   if (timeDifference < minute) {
     const seconds = Math.floor(timeDifference / 1000);
-    return `${seconds} ${seconds > 1 ? "seconds ago" : "second ago"}`;
+    return formatTime(seconds, "second");
   } else if (timeDifference < hour) {
     const minutes = Math.floor(timeDifference / minute);
-    return `${minutes} ${minutes > 1 ? "minutes ago" : "minute ago"}`;
+    return formatTime(minutes, "minute");
   } else if (timeDifference < day) {
     const hours = Math.floor(timeDifference / hour);
-    return `${hours} ${hour > 1 ? "hours ago" : "hour ago"}`;
+    return formatTime(hours, "hour");
   } else if (timeDifference < week) {
     const days = Math.floor(timeDifference / day);
-    return `${days} ${day > 1 ? "days ago" : "day ago"}`;
+    return formatTime(days, "day");
   } else if (timeDifference < month) {
     const weeks = Math.floor(timeDifference / week);
-    return `${weeks} ${weeks > 1 ? "weeks ago" : "week ago"}`;
+    return formatTime(weeks, "week");
   } else if (timeDifference < year) {
     const months = Math.floor(timeDifference / month);
-    return `${months} ${months > 1 ? "months ago" : "month ago"}`;
+    return formatTime(months, "month");
   } else {
     const years = Math.floor(timeDifference / year);
-    return `${years} ${year > 1 ? "years ago" : "year ago"}`;
+    return formatTime(years, "year");
   }
 };
-
 export const capitalizeWord = (word: string) => {
   if (!word) return null;
 
