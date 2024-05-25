@@ -8,20 +8,22 @@ import { SearchParamsProps, TagType } from "@/types";
 import { getAllTags } from "@/lib/actions/tags.action";
 import NoResult from "@/components/shared/NoResult";
 import { Badge } from "@/components/ui/badge";
+import Pagination from "@/components/shared/Pagination";
 
 const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
-  const tags = await getAllTags({
+  const { tags, isNext } = await getAllTags({
     searchQuery: searchParams?.q,
     filter: searchParams?.filter,
+    page: searchParams?.page ? +searchParams.page : 1,
   });
 
   return (
-    <main>
+    <section>
       {/*top header*/}
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold">All Users</h1>
 
-        <Link href="/ask-question" className="flex justify-end max-sm:w-full">
+        <Link href={"/ask-question"} className="flex justify-end max-sm:w-full">
           <Button className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900">
             Ask a Question
           </Button>
@@ -44,7 +46,7 @@ const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
       </div>
 
       {/* All Tags */}
-      <section className="mt-12 flex flex-wrap gap-4">
+      <section className="mt-12 w-full grid grid-col-1 xs:grid-cols-2 lg:grid-cols-3 gap-3">
         {tags.length > 0 ? (
           tags.map((tag: TagType) => (
             <Link
@@ -53,11 +55,11 @@ const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
               className="shadow-light100_darknone"
             >
               <article className="background-light900_dark200 light-border flex w-full flex-col rounded-2xl border px-8 py-10 sm:w-[260px]">
-                <Badge className="subtle-medium background-light800_dark300 text-light400_light500 rounded-md border-none px-6 py-3 uppercase mx-auto text-white !text-[1rem]">
+                <Badge className="subtle-medium background-light800_dark300 text-light400_light500 rounded-md border-none px-6 py-3 uppercase mx-auto text-white !text-[0.85rem]">
                   {tag.name}
                 </Badge>
 
-                <p className="small-medium text-dark400_light500 mt-3.5">
+                <p className="small-medium text-center text-dark400_light500 mt-3.5">
                   <span className="body-semibold primary-text-gradient mr-2.5">
                     {tag.questions?.length ?? 0}+
                   </span>
@@ -75,7 +77,12 @@ const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
           />
         )}
       </section>
-    </main>
+
+      <Pagination
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
+        isNext={isNext}
+      />
+    </section>
   );
 };
 

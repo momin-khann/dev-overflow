@@ -47,15 +47,23 @@ export const getAnswers = asyncHandler(async ({ questionId, filter }: any) => {
 });
 
 export const createAnswer = asyncHandler(async (params: CreateAnswerParams) => {
-  const { question: questionId } = params;
+  const { question: questionId, author } = params;
 
   const answer = await AnswerModel.create(params);
 
-  await QuestionModel.findByIdAndUpdate(questionId, {
+  const question = await QuestionModel.findByIdAndUpdate(questionId, {
     $push: { answers: answer._id },
   });
 
   if (!answer) throw new Error("error creating answer.");
+
+  await InteractionModel.create({
+    user: author,
+    action: "answer",
+    questionId,
+    answer: answer._id,
+    tags: question.tags,
+  });
 
   revalidatePath(`/question/${questionId}`);
 });
@@ -76,7 +84,7 @@ export const upvoteAnswer = asyncHandler(async (params: AnswerVoteParams) => {
 
   if (!userId) throw new Error("User not Logged In");
 
-  let query = {};
+  let query;
 
   if (hasUpVoted) {
     query = { $pull: { upvotes: userId } };
@@ -97,6 +105,14 @@ export const upvoteAnswer = asyncHandler(async (params: AnswerVoteParams) => {
 
   if (!answer) throw new Error("Error fetching answer");
 
+  await UserModel.findByIdAndUpdate(userId, {
+    $inc: { reputation: hasUpVoted ? -1 : 1 },
+  });
+
+  await UserModel.findByIdAndUpdate(userId, {
+    $inc: { reputation: hasUpVoted ? -10 : 10 },
+  });
+
   revalidatePath(path!);
 });
 
@@ -105,7 +121,7 @@ export const downvoteAnswer = asyncHandler(async (params: AnswerVoteParams) => {
 
   if (!userId) throw new Error("User not Logged In");
 
-  let query = {};
+  let query;
 
   if (hasDownVoted) {
     query = { $pull: { downvotes: userId } };
@@ -125,6 +141,14 @@ export const downvoteAnswer = asyncHandler(async (params: AnswerVoteParams) => {
   });
 
   if (!answer) throw new Error("Error fetching answer");
+
+  await UserModel.findByIdAndUpdate(userId, {
+    $inc: { reputation: hasDownVoted ? 1 : -1 },
+  });
+
+  await UserModel.findByIdAndUpdate(userId, {
+    $inc: { reputation: hasDownVoted ? 10 : -10 },
+  });
 
   revalidatePath(path!);
 });

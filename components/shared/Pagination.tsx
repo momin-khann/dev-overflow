@@ -2,7 +2,8 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+
+import { usePagination } from "@/hooks/usePagination";
 
 interface Props {
   pageNumber: number;
@@ -10,23 +11,14 @@ interface Props {
 }
 
 const Pagination = ({ pageNumber, isNext }: Props) => {
-  const router = useRouter();
-  // const searchParams = useSearchParams();
-
-  function handleNavigation(direction: string) {
-    const nextPageNumber =
-      direction === "prev" ? pageNumber - 1 : pageNumber + 1;
-
-    let newUrl = `?page=${nextPageNumber.toString()}`;
-
-    router.replace(newUrl);
-  }
+  // custom hook for pagination
+  const { navigate } = usePagination(pageNumber);
 
   return (
     <div className="flex w-full items-center justify-center gap-2 my-6">
       <Button
         disabled={pageNumber === 1}
-        onClick={() => handleNavigation("prev")}
+        onClick={() => navigate("prev")}
         className="light-border-2 btn flex min-h-[36px] items-center justify-center gap-2 border"
       >
         <p className="body-medium text-dark200_light800">Prev</p>
@@ -36,7 +28,7 @@ const Pagination = ({ pageNumber, isNext }: Props) => {
       </div>
       <Button
         disabled={!isNext}
-        onClick={() => handleNavigation("next")}
+        onClick={() => navigate("next")}
         className="light-border-2 btn flex min-h-[36px] items-center justify-center gap-2 border"
       >
         <p className="body-medium text-dark200_light800">Next</p>

@@ -45,7 +45,7 @@ const getAllUsers = asyncHandler(
 
     if (!users) throw new Error("error fetching users.");
 
-    return users;
+    return { users };
   },
 );
 
@@ -130,7 +130,9 @@ const saveQuestion = asyncHandler(async (params: SaveQuestionParams) => {
 });
 
 const getSavedQuestions = asyncHandler(async (params: SearchQueryParams) => {
-  const { userId, searchQuery, filter } = params;
+  const { userId, searchQuery, filter, page = 1, pageSize = 2 } = params;
+
+  const skipAmount = (page - 1) * pageSize;
 
   if (!userId) throw new Error("user not logged in.");
 
@@ -182,12 +184,20 @@ const getSavedQuestions = asyncHandler(async (params: SearchQueryParams) => {
       match: query,
       options: {
         sort: sortByFilter,
+        skip: skipAmount,
+        limit: pageSize + 1,
       },
     });
 
+  const savedQuestions = questions.saved;
+
+  const isNext = savedQuestions.length > pageSize;
+
+  console.log(savedQuestions.length, pageSize);
+
   if (!questions) throw new Error("no saved questions found.");
 
-  return questions.saved;
+  return { savedQuestions, isNext };
 });
 
 const getUserQuestions = asyncHandler(async (params: any) => {

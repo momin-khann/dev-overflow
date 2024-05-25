@@ -7,13 +7,15 @@ import { getMongoUserId } from "@/helpers/getMongoUser";
 import Filter from "@/components/shared/Filter";
 import { questionFilters } from "@/data/filters";
 import LocalSearchbar from "@/components/shared/search/LocalSearch";
+import Pagination from "@/components/shared/Pagination";
 
 const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
   const userId = await getMongoUserId();
-  const savedQuestions = await getSavedQuestions({
+  const { savedQuestions, isNext } = await getSavedQuestions({
     userId,
     searchQuery: searchParams?.q,
     filter: searchParams?.filter,
+    page: searchParams?.page ? +searchParams.page : 1,
   });
 
   return (
@@ -59,6 +61,11 @@ const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
           />
         )}
       </div>
+
+      <Pagination
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
+        isNext={isNext}
+      />
     </main>
   );
 };
