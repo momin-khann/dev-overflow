@@ -2,9 +2,8 @@
 
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useDebounce } from "@/hooks/useDebounce";
+import React from "react";
+import { useUrl } from "@/hooks/useUrl";
 
 interface CustomInputProps {
   route?: string;
@@ -22,40 +21,11 @@ const LocalSearchbar = ({
   otherClasses,
 }: CustomInputProps) => {
   // states
-  const searchParams = useSearchParams();
-  const { replace } = useRouter();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debounceValue, setDebounceValue] = useDebounce(searchTerm, 400);
-  const params = new URLSearchParams(searchTerm);
 
-  let newPath: string = "";
-
-  useEffect(() => {
-    const filter = searchParams.get("filter");
-
-    if (debounceValue && filter) {
-      newPath = `q=${searchTerm}&filter=${filter}`;
-    } else if (!debounceValue && filter) {
-      params.delete("q");
-      newPath = `filter=${filter}`;
-    } else if (debounceValue && !filter) {
-      params.delete("filter");
-      newPath = `q=${searchTerm}`;
-    } else {
-      params.delete("q");
-    }
-
-    replace(`?${newPath}`, { scroll: false });
-  }, [debounceValue]);
-
-  function handleSearch(value: string) {
-    if (!value) {
-      setSearchTerm("");
-      setDebounceValue("");
-    }
-
-    setSearchTerm(value);
-  }
+  const { setUrlQuery } = useUrl({
+    keyToAdd: "q",
+    keysToRemove: ["q"],
+  });
 
   return (
     <div
@@ -74,8 +44,8 @@ const LocalSearchbar = ({
       <Input
         type="text"
         placeholder={placeholder}
-        defaultValue={searchParams.get("q")?.toString()}
-        onChange={(e) => handleSearch(e.target.value)}
+        // value={search}
+        onChange={(e) => setUrlQuery(e.target.value)}
         className="paragraph-regular no-focus placeholder background-light800_darkgradient border-none shadow-none outline-none"
       />
 

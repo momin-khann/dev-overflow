@@ -19,9 +19,16 @@ export const getTopInteractedTags = asyncHandler(async (userId: string) => {
 });
 
 export const getAllTags = asyncHandler(
-  async ({ searchQuery, filter }: SearchQueryParams) => {
+  async ({
+    searchQuery,
+    filter,
+    page = 1,
+    pageSize = 12,
+  }: SearchQueryParams) => {
     let query: FilterQuery<typeof UserModel> = {};
     let sortByFilter = {};
+
+    const skipAmount = (page - 1) * pageSize;
 
     if (searchQuery) {
       query = {
@@ -46,11 +53,18 @@ export const getAllTags = asyncHandler(
         break;
     }
 
-    const tags = await TagModel.find(query).sort(sortByFilter);
+    const tags = await TagModel.find(query)
+      .sort(sortByFilter)
+      .skip(skipAmount)
+      .limit(pageSize);
 
     if (!tags) throw new Error("Tags not found.");
 
-    return tags;
+    const totalTags = await TagModel.countDocuments(query);
+
+    const isNext = totalTags > skipAmount + tags.length;
+
+    return { tags, isNext };
   },
 );
 

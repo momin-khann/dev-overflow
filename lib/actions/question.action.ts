@@ -17,9 +17,17 @@ import { InteractionModel } from "@/models/interaction.model";
 import { FilterQuery } from "mongoose";
 
 const getQuestions = asyncHandler(
-  async ({ searchQuery, filter }: SearchQueryParams) => {
+  async ({
+    searchQuery,
+    filter,
+    page = 1,
+    pageSize = 2,
+  }: SearchQueryParams) => {
     let query: FilterQuery<typeof QuestionModel> = {};
     let sortByFilter = {};
+
+    // calculate number of posts to skip via page number and size
+    const skipAmount = (page - 1) * pageSize;
 
     if (searchQuery) {
       query.$or = [
@@ -44,16 +52,21 @@ const getQuestions = asyncHandler(
 
     // get all questions
     const questions = await QuestionModel.find(query)
-      .populate({
-        path: "tags",
-        model: TagModel,
-      })
+      .populate({ path: "tags", model: TagModel })
       .populate({ path: "author", model: UserModel })
+      .skip(skipAmount)
+      .limit(pageSize)
       .sort(sortByFilter);
+
+    // overall question searched based on query
+    const totalQuestions = await QuestionModel.countDocuments(query);
+
+    // totalQuestions > Number of Questions on current page
+    const isNext = totalQuestions > skipAmount + questions.length;
 
     if (!questions) throw new Error("error fetching questions");
 
-    return questions;
+    return { questions, isNext };
   },
 );
 
@@ -92,6 +105,15 @@ const createQuestion = asyncHandler(async (params: CreateQuestionParams) => {
     $push: { tags: { $each: tagDocuments } },
   });
 
+  await InteractionModel.create({
+    user: author,
+    action: "ask_question",
+    question: question._id,
+    tags: tagDocuments,
+  });
+
+  await UserModel.findByIdAndUpdate(author, { $inc: { reputation: 5 } });
+
   revalidatePath(path);
 });
 
@@ -116,17 +138,21 @@ const getQuestionById = asyncHandler(async (id: string) => {
 const upvoteQuestion = asyncHandler(async (params: QuestionVoteParams) => {
   const { questionId, userId, hasUpVoted, hasDownVoted } = params;
 
-  let updateQuery = {};
+  let updateQuery;
 
-  if (hasUpVoted) {
-    if (!hasDownVoted) updateQuery = { $pull: { upvotes: userId } };
-  } else if (hasDownVoted) {
-    if (!hasUpVoted)
-      updateQuery = {
-        $pull: { downvotes: userId },
-        $push: { upvotes: userId },
-      };
-  } else {
+  // Checks if already upvoted, so remove the upvote
+  if (hasUpVoted && !hasDownVoted) {
+    updateQuery = { $pull: { upvotes: userId } };
+  }
+  // Checks if already downvoted, so remove the downvote
+  else if (hasDownVoted && !hasUpVoted) {
+    updateQuery = {
+      $pull: { downvotes: userId },
+      $push: { upvotes: userId },
+    };
+  }
+  // if upvoted than upvote it
+  else {
     updateQuery = { $push: { upvotes: userId } };
   }
 
@@ -138,13 +164,24 @@ const upvoteQuestion = asyncHandler(async (params: QuestionVoteParams) => {
 
   if (!question) throw new Error("Question not found.");
 
+  // Increment author's reputation by +1/-1 for upvoting / revoking an upvote to the question
+  await UserModel.findByIdAndUpdate(userId, {
+    // if already upvoted then -1 else increment with 1
+    $inc: { reputation: hasUpVoted ? -1 : 1 },
+  });
+
+  // Increment authors's reputaion by +10/-10 for recieving an upvote / downvote to the question.
+  await UserModel.findByIdAndUpdate(question.author, {
+    $inc: { reputation: hasUpVoted ? -10 : 10 },
+  });
+
   revalidatePath(`/question/${questionId}`);
 });
 
 const downvoteQuestion = asyncHandler(async (params: QuestionVoteParams) => {
   const { questionId, userId, hasUpVoted, hasDownVoted } = params;
 
-  let updateQuery = {};
+  let updateQuery;
 
   if (hasDownVoted) {
     updateQuery = { $pull: { downvotes: userId } };
@@ -163,6 +200,16 @@ const downvoteQuestion = asyncHandler(async (params: QuestionVoteParams) => {
   );
 
   if (!question) throw new Error("Question not found.");
+
+  // user that downvotes
+  await UserModel.findByIdAndUpdate(userId, {
+    $inc: { reputation: hasDownVoted ? 1 : -1 },
+  });
+
+  // user that receives downvote
+  await UserModel.findByIdAndUpdate(userId, {
+    $inc: { reputation: hasDownVoted ? 10 : -10 },
+  });
 
   revalidatePath(`/question/${questionId}`);
 });
