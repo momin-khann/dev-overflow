@@ -3,8 +3,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 
-import { usePagination } from "@/hooks/usePagination";
-
 interface Props {
   pageNumber: number;
   isNext: boolean;
@@ -19,6 +17,7 @@ const Pagination = ({ pageNumber, isNext }: Props) => {
       <Button
         disabled={pageNumber === 1}
         onClick={() => navigate("prev")}
+
         className="light-border-2 btn flex min-h-[36px] items-center justify-center gap-2 border"
       >
         <p className="body-medium text-dark200_light800">Prev</p>
