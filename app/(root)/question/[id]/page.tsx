@@ -19,8 +19,12 @@ interface OwnProps {
 type Props = OwnProps;
 
 const page: FunctionComponent<Props> = async ({ params, searchParams }) => {
-  const user = await getMongoUser();
-  const question = await getQuestionById(params.id);
+  const [user, question] = await Promise.all([
+    getMongoUser(),
+    getQuestionById(params.id),
+  ]);
+
+  console.log(user);
 
   return (
     <>
@@ -45,16 +49,18 @@ const page: FunctionComponent<Props> = async ({ params, searchParams }) => {
             <Votes
               type={"question"}
               itemId={question._id.toString()}
-              userId={user._id.toString()}
+              userId={user?._id.toString()}
               upvotes={question.upvotes?.length ?? 0}
               downvotes={question.downvotes?.length ?? 0}
               hasUpVoted={
-                question.upvotes?.includes(user._id.toString()) ?? false
+                question.upvotes?.includes(user?._id.toString()) ?? false
               }
               hasDownVoted={
-                question.downvotes?.includes(user._id.toString()) ?? false
+                question.downvotes?.includes(user?._id.toString()) ?? false
               }
-              hasSaved={user?.saved?.includes(question._id.toString()) ?? false}
+              hasSaved={
+                user?.saved?.includes(question?._id.toString()) ?? false
+              }
             />
           </div>
         </div>
@@ -104,14 +110,14 @@ const page: FunctionComponent<Props> = async ({ params, searchParams }) => {
 
       <AllAnswers
         questionId={params.id}
-        mongoUserId={user._id.toString()}
+        mongoUserId={user?._id.toString()}
         totalAnswers={question.answers.length}
         page={searchParams?.page}
         filter={searchParams?.filter}
       />
 
       {/* Answers */}
-      <Answer mongoUserId={user._id.toString()} questionId={params.id} />
+      <Answer mongoUserId={user?._id.toString()} questionId={params.id} />
     </>
   );
 };
