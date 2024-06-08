@@ -5,32 +5,26 @@ import Image from "next/image";
 import Link from "next/link";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useSearchParams } from "next/navigation";
+import GlobalFilters from "@/components/shared/search/GlobalFilters";
+
+const renderLink = (type: string, id: string) => {
+  switch (type) {
+    case "question":
+      return `/question/${id}`;
+    case "answer":
+      return `/question/${id}`;
+    case "user":
+      return `/profile/${id}`;
+    case "tag":
+      return `/tags/${id}`;
+    default:
+      return "/";
+  }
+};
 
 const GlobalResult = () => {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
-
-  // useEffect(() => {
-  //   const fetchResult = async () => {
-  //     setResult([]);
-  //     setIsLoading(true);
-  //
-  //     try {
-  //       const res = await globalSearch({ query: global, type })
-  //
-  //       setResult(JSON.parse(res));
-  //     } catch (error) {
-  //       console.error(error);
-  //       throw error;
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   }
-  //
-  //   if(global) {
-  //     fetchResult();
-  //   }
-  // }, [global, type])
 
   const [result, setResult] = useState([
     { type: "question", id: 1, title: "Next.js question" },
@@ -38,24 +32,30 @@ const GlobalResult = () => {
     { type: "user", id: 1, title: "jsm" },
   ]);
 
-  const renderLink = (type: string, id: string) => {
-    switch (type) {
-      case "question":
-        return `/question/${id}`;
-      case "answer":
-        return `/question/${id}`;
-      case "user":
-        return `/profile/${id}`;
-      case "tag":
-        return `/tags/${id}`;
-      default:
-        return "/";
-    }
-  };
+  const global = searchParams.get("global");
+  const type = searchParams.get("type");
+
+  useEffect(() => {
+    global &&
+      (async () => {
+        setResult([]);
+        setIsLoading(true);
+
+        try {
+          // const res = await globalSearch({ query: global, type })
+          // setResult(JSON.parse(res));
+        } catch (error) {
+          console.error(error);
+          throw error;
+        } finally {
+          setIsLoading(false);
+        }
+      })();
+  }, [global, type]);
 
   return (
     <div className="absolute top-full z-10 mt-3 w-full rounded-xl bg-light-800 py-5 shadow-sm dark:bg-dark-400">
-      {/*<GlobalFilters />*/}
+      <GlobalFilters />
       <div className="my-5 h-[1px] bg-light-700/50 dark:bg-dark-500/50" />
 
       <div className="space-y-5">

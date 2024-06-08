@@ -10,7 +10,7 @@ const Page = async () => {
 
       <div className="mt-9">
         <Profile
-          userId={mongoUser._id.toString()}
+          userId={mongoUser?._id.toString()}
           user={JSON.stringify(mongoUser)}
         />
       </div>

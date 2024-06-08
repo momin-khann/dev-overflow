@@ -1,40 +1,28 @@
 "use client";
 
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { homePageFilters } from "@/data/filters";
 import { Button } from "@/components/ui/button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useUrl } from "@/hooks/useUrl";
 
 const HomeFilters: FunctionComponent = () => {
-  const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams);
-  const { replace } = useRouter();
-  const [active, setActive] = useState(searchParams.get("filter") || "newest");
-  const [filter, setFilter] = useState("");
+  const filterParams = useSearchParams().get("filter");
+  const [active, setActive] = useState(filterParams || "");
 
-  let newPath: string = "";
+  const { setUrlQuery } = useUrl({
+    keyToAdd: "filter",
+    keysToRemove: ["filter"],
+  });
 
-  useEffect(() => {
-    const searchQuery = searchParams.get("q");
-
-    if (searchQuery && filter) {
-      newPath = `q=${searchQuery}&filter=${filter}`;
-    } else if (!searchQuery && filter) {
-      params.delete("q");
-      newPath = `filter=${filter}`;
-    } else if (searchQuery && !filter) {
-      params.delete("filter");
-      newPath = `q=${searchQuery}`;
-    } else {
-      params.delete("filter");
+  const handleClick = (item: string) => {
+    if (active === item) {
+      setActive("");
+      setUrlQuery("");
+      return;
     }
-
-    replace(`?${newPath}`, { scroll: false });
-  }, [filter]);
-
-  const handleClick = (value: string) => {
-    setActive(value);
-    setFilter(value);
+    setActive(item);
+    setUrlQuery(item.toLowerCase());
   };
 
   return (

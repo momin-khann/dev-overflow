@@ -21,7 +21,7 @@ const getQuestions = asyncHandler(
     searchQuery,
     filter,
     page = 1,
-    pageSize = 2,
+    pageSize = 10,
   }: SearchQueryParams) => {
     let query: FilterQuery<typeof QuestionModel> = {};
     let sortByFilter = {};

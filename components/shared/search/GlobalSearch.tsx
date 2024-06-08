@@ -1,63 +1,27 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import GlobalResult from "@/components/shared/search/GlobalResult";
-import { useDebounce } from "@/hooks/useDebounce";
 import { useClickOutside } from "@/hooks/useClickOutside";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useUrl } from "@/hooks/useUrl";
 
 const GlobalSearch = () => {
-  const pathname = usePathname();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [debounceValue, setDebounceValue] = useDebounce(searchTerm, 400);
-  const params = new URLSearchParams(searchTerm);
   const searchContainerRef = useRef(null);
 
   useClickOutside({
     ref: searchContainerRef,
-    dependency: pathname,
     data: {
-      setSearchTerm,
       setIsOpen,
     },
   });
 
-  let newPath: string = "";
-
-  useEffect(() => {
-    const filter = searchParams.get("filter");
-
-    // if (debounceValue && filter) {
-    //   newPath = `q=${searchTerm}&filter=${filter}`;
-    // } else if (!debounceValue && filter) {
-    //   params.delete("q");
-    //   newPath = `filter=${filter}`;
-    // } else if (debounceValue && !filter) {
-    //   params.delete("filter");
-    //   newPath = `q=${searchTerm}`;
-    // } else {
-    //   params.delete("q");
-    // }
-
-    router.replace(`?${newPath}`, { scroll: false });
-  }, [debounceValue]);
-
-  const handleSearch = (value: string) => {
-    if (!value) {
-      setIsOpen(false);
-      setSearchTerm("");
-      setDebounceValue("");
-      return;
-    }
-
-    setIsOpen(true);
-    setSearchTerm(value);
-  };
+  const { setUrlQuery } = useUrl({
+    keyToAdd: "global",
+    keysToRemove: ["global", "type"],
+  });
 
   return (
     <div
@@ -76,8 +40,12 @@ const GlobalSearch = () => {
         <Input
           type="text"
           placeholder="Search globally"
-          // defaultValue={""}
-          onChange={(e) => handleSearch(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+
+            setUrlQuery(value);
+            value === "" ? setIsOpen(false) : setIsOpen(true);
+          }}
           className="paragraph-regular no-focus placeholder background-light800_darkgradient border-none shadow-none outline-none"
         />
       </div>

@@ -102,4 +102,5 @@ export interface SearchQueryParams {
   filter?: string;
   page?: number;
   pageSize?: number;
+  type?: string;
 }

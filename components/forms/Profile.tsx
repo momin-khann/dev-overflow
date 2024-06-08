@@ -33,11 +33,11 @@ const Profile = ({ userId, user }: Props) => {
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: parsedUser.name || "",
-      username: parsedUser.username || "",
-      portfolioWebsite: parsedUser.portfolioWebsite || "",
-      location: parsedUser.location || "",
-      bio: parsedUser.bio || "",
+      name: parsedUser?.name || "",
+      username: parsedUser?.username || "",
+      portfolioWebsite: parsedUser?.portfolioWebsite || "",
+      location: parsedUser?.location || "",
+      bio: parsedUser?.bio || "",
     },
   });
 
