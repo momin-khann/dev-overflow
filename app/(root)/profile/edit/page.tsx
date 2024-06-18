@@ -2,6 +2,11 @@ import React from "react";
 import Profile from "@/components/forms/Profile";
 import { getMongoUser } from "@/helpers/getMongoUser";
 
+export async function generateMetadata() {
+  const { name } = await getMongoUser();
+  return { title: `Edit ${name.split(" ")[0]}'s Profile` };
+}
+
 const Page = async () => {
   const mongoUser = await getMongoUser();
   return (

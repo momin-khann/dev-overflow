@@ -1,7 +1,11 @@
 import React from "react";
 import Question from "@/components/forms/Question";
 import { getMongoUserId } from "@/helpers/getMongoUser";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Ask Questions"
+}
 const AskQuestion = async () => {
   const mongoUserId = await getMongoUserId();
 

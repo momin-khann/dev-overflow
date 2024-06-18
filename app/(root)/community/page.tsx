@@ -7,7 +7,11 @@ import { userFilters } from "@/data/filters";
 import UserCard from "@/components/cards/UserCard";
 import { getAllUsers } from "@/lib/actions/user.action";
 import { SearchParamsProps, UserType } from "@/types";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Community"
+}
 const page = async ({ searchParams }: SearchParamsProps) => {
   const { users } = await getAllUsers({
     searchQuery: searchParams?.q,

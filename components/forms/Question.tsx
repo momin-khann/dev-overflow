@@ -19,12 +19,9 @@ import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { getUserById } from "@/lib/actions/user.action";
 import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import RichTextEditor from "@/components/forms/RichTextEditor";
-import { QuestionType } from "@/types";
 import { useRouter } from "next/navigation";
-import { getMongoUserId } from "@/helpers/getMongoUser";
 
 interface Props {
   mongoUserId?: string;

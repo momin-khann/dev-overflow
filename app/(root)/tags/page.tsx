@@ -9,7 +9,12 @@ import { getAllTags } from "@/lib/actions/tags.action";
 import NoResult from "@/components/shared/NoResult";
 import { Badge } from "@/components/ui/badge";
 import Pagination from "@/components/shared/Pagination";
+import { Metadata } from "next";
 
+
+export const metadata: Metadata = {
+  title: "Tags"
+}
 const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
   const { tags, isNext } = await getAllTags({
     searchQuery: searchParams?.q,

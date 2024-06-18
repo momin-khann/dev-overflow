@@ -19,6 +19,7 @@ const userSchema = new Schema<IUser>({
   clerkId: {
     type: String,
     required: [true, "clerkId is required."],
+    index: true,
   },
   name: {
     type: String,
