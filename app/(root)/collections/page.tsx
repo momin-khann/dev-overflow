@@ -27,7 +27,7 @@ const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
           route="/"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
-          placeholder="Search for questions"
+          placeholder="Search Questions"
           otherClasses="flex-1"
         />
 

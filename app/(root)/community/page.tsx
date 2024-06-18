@@ -33,7 +33,7 @@ const page = async ({ searchParams }: SearchParamsProps) => {
         <LocalSearch
           route={"/community"}
           iconPosition={"left"}
-          placeholder={"Search for users"}
+          placeholder={"Search Users"}
           otherClasses={"flex-1"}
         />
 

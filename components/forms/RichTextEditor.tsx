@@ -1,8 +1,9 @@
 "use client";
-import React, { forwardRef } from "react";
+import React, { forwardRef, Suspense } from "react";
 import { richTextEditor } from "@/lib/richTextEditor";
 import { Editor } from "@tinymce/tinymce-react";
 import { useTheme } from "next-themes";
+import Spinner from "@/components/shared/Spinner";
 
 function RichTextEditor({ field, initialValue }: any, ref: any) {
   const { resolvedTheme: mode } = useTheme();
@@ -12,23 +13,24 @@ function RichTextEditor({ field, initialValue }: any, ref: any) {
 
   return (
     <>
-      <Editor
-        key={mode}
-        apiKey={richTextEditor.apiKey}
-        initialValue={initialValue}
-        onInit={(_evt, editor) => {
-          // @ts-ignore
-          ref.current = editor;
-        }}
-        // initialValue=""
-        init={{
-          skin: skinColor,
-          content_css: contentColor,
-          ...richTextEditor.init,
-        }}
-        onBlur={field.onBlur}
-        onEditorChange={(content) => field.onChange(content)}
-      />
+      <Suspense fallback={<Spinner />}>
+        <Editor
+          key={mode}
+          apiKey={richTextEditor.apiKey}
+          initialValue={initialValue}
+          onInit={(_evt, editor) => {
+            // @ts-ignore
+            ref.current = editor;
+          }}
+          init={{
+            skin: skinColor,
+            content_css: contentColor,
+            ...richTextEditor.init,
+          }}
+          onBlur={field.onBlur}
+          onEditorChange={(content) => field.onChange(content)}
+        />
+      </Suspense>
     </>
   );
 }

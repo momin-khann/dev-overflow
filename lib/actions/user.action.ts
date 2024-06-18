@@ -193,8 +193,6 @@ const getSavedQuestions = asyncHandler(async (params: SearchQueryParams) => {
 
   const isNext = savedQuestions.length > pageSize;
 
-  console.log(savedQuestions.length, pageSize);
-
   if (!questions) throw new Error("no saved questions found.");
 
   return { savedQuestions, isNext };

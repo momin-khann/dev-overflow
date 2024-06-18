@@ -35,7 +35,7 @@ const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
         <LocalSearch
           route={"/tags"}
           iconPosition={"left"}
-          placeholder={"Search for users"}
+          placeholder={"Search Tags"}
           otherClasses={"flex-1"}
         />
 

@@ -9,6 +9,9 @@ body {
 }
 
 @layer utilities {
+  .gradient-black-and-white{
+    background: linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgb(63, 61, 61) 78.9%);
+  }
   .flex-center {
     @apply flex justify-center items-center;
   }

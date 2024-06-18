@@ -60,7 +60,7 @@ export default function Answer({ questionId, mongoUserId }: Props) {
     }
   }
 
-  const generateAIAnswer = async () => {
+  const enhanceAnswer = async () => {
     // if (!authorId) return;
   };
 
@@ -73,7 +73,7 @@ export default function Answer({ questionId, mongoUserId }: Props) {
 
         <Button
           className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
-          onClick={generateAIAnswer}
+          onClick={enhanceAnswer}
         >
           <Image
             src="/assets/icons/stars.svg"
@@ -82,7 +82,7 @@ export default function Answer({ questionId, mongoUserId }: Props) {
             height={12}
             className="object-contain"
           />
-          Generate AI Answer
+          Enhance Your Answer
         </Button>
       </div>
 
