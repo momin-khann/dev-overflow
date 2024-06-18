@@ -11,6 +11,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Stats from "@/components/shared/Stats";
 import QuestionTab from "@/components/shared/QuestionTab";
 import AnswersTab from "@/components/shared/AnswerTab";
+import { Metadata } from "next";
+
+
+export async function generateMetadata() {
+  const { name } = await getMongoUser();
+  return { title: `${name.split(" ")[0]}'s Profile` };
+}
 
 const Page = async () => {
   const user = await getMongoUser();

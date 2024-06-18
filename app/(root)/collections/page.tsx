@@ -8,7 +8,12 @@ import Filter from "@/components/shared/Filter";
 import { questionFilters } from "@/data/filters";
 import LocalSearchbar from "@/components/shared/search/LocalSearch";
 import Pagination from "@/components/shared/Pagination";
+import { Metadata } from "next";
 
+
+export const metadata: Metadata = {
+  title: "Saved Questions"
+}
 const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
   const userId = await getMongoUserId();
   const { savedQuestions, isNext } = await getSavedQuestions({

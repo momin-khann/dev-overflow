@@ -6,7 +6,18 @@ import NoResult from "@/components/shared/NoResult";
 import { QuestionType } from "@/types";
 import { capitalizeWord } from "@/helpers/sanitizer";
 
-const Page = async ({ params }: any) => {
+interface Props {
+  id: string;
+}
+
+export async function generateMetadata({ params }: { params: Props }) {
+  const tagQuestions = await getQuestionsByTagId(params.id);
+  const { name } = tagQuestions;
+
+  return { title: `${capitalizeWord(name)} Tag` };
+}
+
+const Page = async ({ params }: { params: Props }) => {
   const tagQuestions = await getQuestionsByTagId(params.id);
 
   const { name, questions } = tagQuestions;
