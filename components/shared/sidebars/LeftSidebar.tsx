@@ -12,7 +12,7 @@ const LeftSidebar = () => {
   const { userId } = useAuth();
 
   return (
-    <section className="background-light900_dark200 light-border custom-scrollbar sticky left-0 top-0 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-36 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
+    <section className="background-light900_dark200 light-border custom-scrollbar sticky left-0 top-0 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-32 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
 
       {/* Rendering sidebar list */}
       <div className="flex flex-1 flex-col gap-2">
@@ -21,10 +21,12 @@ const LeftSidebar = () => {
             (pathname.includes(item.route) && item.route.length > 1) ||
             pathname === item.route;
 
-          if (item.route === "/profile") {
-            if (!userId) return;
-            item.route = `/profile/${userId}`;
-          }
+          // if route is profile then return with userId profile link
+          item.route = item.route === "/profile" && userId ? `/profile/${userId}` : item.route;
+
+          // if active so, change icon image
+          isActive && item.route === "/ask-ai" && (item.imgURL = "/assets/icons/stars-white.svg");
+          !isActive && item.route === "/ask-ai" && (item.imgURL = "/assets/icons/stars.svg");
 
           return <SideLink key={item.label} item={item} isActive={isActive} />
         })}
