@@ -3,9 +3,9 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import { useSearchParams } from "next/navigation";
 import GlobalFilters from "@/components/shared/search/GlobalFilters";
+import Spinner from "@/components/shared/Spinner";
 
 const renderLink = (type: string, id: string) => {
   switch (type) {
@@ -65,7 +65,7 @@ const GlobalResult = () => {
 
         {isLoading ? (
           <div className="flex-center flex-col px-5">
-            <ReloadIcon className="my-2 h-10 w-10 animate-spin text-primary-500" />
+            <Spinner />
             <p className="text-dark200_light800 body-regular">
               Browsing the entire database
             </p>

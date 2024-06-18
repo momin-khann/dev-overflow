@@ -24,8 +24,6 @@ const page: FunctionComponent<Props> = async ({ params, searchParams }) => {
     getQuestionById(params.id),
   ]);
 
-  console.log(user);
-
   return (
     <>
       <div className="flex-start w-full flex-col">

@@ -59,7 +59,7 @@ const Profile = ({ userId, user }: Props) => {
 
       router.back();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
