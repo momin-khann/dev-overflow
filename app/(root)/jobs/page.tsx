@@ -1,7 +1,7 @@
-import React, { FunctionComponent } from "react";
+import React from "react";
 
-const page: FunctionComponent = () => {
-  return <div>Find Jobs</div>;
+const page = () => {
+  return <div>Coming Soon</div>;
 };
 
 export default page;

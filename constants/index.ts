@@ -48,6 +48,19 @@ export const sidebarLinks: SidebarLink[] = [
   }
 ];
 
+export const comingSoon: SidebarLink[] = [
+  {
+    imgURL: "/assets/icons/suitcase.svg",
+    route: "/jobs",
+    label: "Find Jobs",
+  },
+  {
+    imgURL: "/assets/icons/blog.svg",
+    route: "/blogs",
+    label: "Blogs"
+  }
+]
+
 export const BADGE_CRITERIA = {
   QUESTION_COUNT: {
     BRONZE: 10,

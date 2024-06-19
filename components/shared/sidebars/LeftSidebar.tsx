@@ -1,6 +1,6 @@
 "use client";
 
-import { sidebarLinks } from "@/constants";
+import { comingSoon, sidebarLinks } from "@/constants";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,7 +12,8 @@ const LeftSidebar = () => {
   const { userId } = useAuth();
 
   return (
-    <section className="background-light900_dark200 light-border custom-scrollbar sticky left-0 top-0 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-32 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
+    <section
+      className="background-light900_dark200 light-border custom-scrollbar sticky left-0 top-0 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-32 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
 
       {/* Rendering sidebar list */}
       <div className="flex flex-1 flex-col gap-2">
@@ -28,8 +29,17 @@ const LeftSidebar = () => {
           isActive && item.route === "/ask-ai" && (item.imgURL = "/assets/icons/stars-white.svg");
           !isActive && item.route === "/ask-ai" && (item.imgURL = "/assets/icons/stars.svg");
 
-          return <SideLink key={item.label} item={item} isActive={isActive} />
+          return <SideLink key={item.label} item={item} isActive={isActive} />;
         })}
+
+        <hr />
+
+        {comingSoon.map((item) => {
+          const isActive = pathname.includes(item.route) || pathname === item.route;
+
+          return <SideLink key={item.label} item={item} isActive={isActive} />;
+        })}
+
       </div>
 
       {/* Bottom Auth Buttons */}
@@ -41,15 +51,16 @@ const LeftSidebar = () => {
 export default LeftSidebar;
 
 
-interface Props{
+interface Props {
   item: {
     label: string;
     route: string;
     imgURL: string;
-  }
+  };
   isActive: boolean;
 }
-const SideLink = ({item, isActive}: Props) => {
+
+const SideLink = ({ item, isActive }: Props) => {
   return (
     <Link
       href={item.route}
@@ -97,7 +108,8 @@ const AuthButtons = () => {
         </Link>
 
         <Link href={"/sign-up"}>
-          <Button className="small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full rounded-lg border px-4 py-3 shadow-none">
+          <Button
+            className="small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full rounded-lg border px-4 py-3 shadow-none">
             <Image
               src="/assets/icons/sign-up.svg"
               alt="sign up"
