@@ -104,6 +104,17 @@ body {
   background: #555;
 }
 
+.CodeBlockClass {
+  position: relative;
+}
+
+.CopyButtonClass {
+  position: absolute;
+  top: 4px;
+  right: 10px;
+  cursor: pointer;
+}
+
 /* Markdown Start */
 .markdown a {
   color: #1da1f2;

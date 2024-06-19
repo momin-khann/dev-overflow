@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FunctionComponent, useRef, useState } from "react";
+import React, { FunctionComponent, Suspense, useRef, useState } from "react";
 import {
   Form,
   FormControl,
@@ -28,11 +28,12 @@ interface Props {
   type?: string;
   questionDetails?: any;
 }
+
 const Question: FunctionComponent<Props> = ({
-  questionDetails,
-  mongoUserId,
-  type,
-}) => {
+                                              questionDetails,
+                                              mongoUserId,
+                                              type,
+                                            }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef(null);
   const router = useRouter();
