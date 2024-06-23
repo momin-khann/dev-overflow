@@ -83,10 +83,12 @@ const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
         )}
       </section>
 
-      <Pagination
-        pageNumber={searchParams?.page ? +searchParams.page : 1}
-        isNext={isNext}
-      />
+      {tags?.length > 18 && (
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={isNext}
+        />
+      )}
     </section>
   );
 };

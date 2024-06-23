@@ -70,10 +70,12 @@ export default async function Home({ searchParams }: SearchParamsProps) {
         />
       )}
 
-      <Pagination
-        pageNumber={searchParams?.page ? +searchParams.page : 1}
-        isNext={isNext}
-      />
+      {questions?.length > 10 && (
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={isNext}
+        />
+      )}
     </main>
   );
 }

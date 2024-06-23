@@ -1,13 +1,20 @@
 import React from "react";
 import { Metadata } from "next";
+import AskForm from "./AskForm";
+import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Ask AI"
-}
+  title: "Ask AI",
+};
 
 const AskAI = () => {
+  // ask ai
+
   return (
-    <div>AskAI</div>
+    // <main className="flex-1 flex flex-col">
+      <AskForm />
+
+
   );
 };
 export default AskAI;

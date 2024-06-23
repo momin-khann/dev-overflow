@@ -1,10 +1,8 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-type ReturnType = [string, Dispatch<SetStateAction<string>>];
-
-export const useDebounce = (value: string, interval: number): ReturnType => {
+export const useDebounce = (value: string, interval: number) => {
   const [debounceValue, setDebounceValue] = useState("");
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -14,5 +12,5 @@ export const useDebounce = (value: string, interval: number): ReturnType => {
     return () => clearTimeout(timer);
   }, [value]);
 
-  return [debounceValue, setDebounceValue];
+  return { debounceValue, setDebounceValue };
 };
