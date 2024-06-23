@@ -48,7 +48,7 @@ const page = async ({ searchParams }: SearchParamsProps) => {
       </div>
 
       {/* All Users */}
-      <section className="mt-12 w-full flex flex-wrap gap-4">
+      <section className="mt-12 w-full flex flex-between flex-wrap gap-4">
         {users?.length > 0 ? (
           users.map((user: UserType) => <UserCard key={user._id} user={user} />)
         ) : (

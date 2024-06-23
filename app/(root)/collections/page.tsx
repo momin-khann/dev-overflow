@@ -12,8 +12,8 @@ import { Metadata } from "next";
 
 
 export const metadata: Metadata = {
-  title: "Saved Questions"
-}
+  title: "Saved Questions",
+};
 const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
   const userId = await getMongoUserId();
   const { savedQuestions, isNext } = await getSavedQuestions({
@@ -67,10 +67,12 @@ const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
         )}
       </div>
 
-      <Pagination
-        pageNumber={searchParams?.page ? +searchParams.page : 1}
-        isNext={isNext}
-      />
+      {savedQuestions?.length > 10 && (
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={isNext}
+        />
+      )}
     </main>
   );
 };
