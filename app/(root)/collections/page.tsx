@@ -10,7 +10,6 @@ import LocalSearchbar from "@/components/shared/search/LocalSearch";
 import Pagination from "@/components/shared/Pagination";
 import { Metadata } from "next";
 
-
 export const metadata: Metadata = {
   title: "Saved Questions",
 };
@@ -42,7 +41,7 @@ const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
         />
       </div>
 
-      <div className="mt-6 flex w-full flex-col gap-6">
+      <div className="mt-6 flex w-full flex-col">
         {savedQuestions?.length > 0 ? (
           savedQuestions.map((question: QuestionType) => (
             <QuestionCard

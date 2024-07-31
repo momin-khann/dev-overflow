@@ -38,7 +38,7 @@ const QuestionCard: FunctionComponent<Props> = ({
   const showEditDelete = clerkId && clerkId === author?.clerkId;
 
   return (
-    <div className="card-wrapper rounded-[10px] p-9 sm:px-11 my-6">
+    <div className="card-wrapper rounded-[10px] p-9 sm:px-11 my-4">
       <div className="flex justify-between">
         <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
           <div>

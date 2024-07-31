@@ -9,7 +9,7 @@ export const asyncHandler = (fn: any) => {
 
       return await fn(params);
     } catch (error: any) {
-      console.error("error", error.message);
+      console.error("error -> ", error.message);
     }
   };
 };

@@ -14,7 +14,6 @@ const AskForm = () => {
   async function handleQuery(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     // setDebounceValue(event.target.value);
-    console.log(input.trim());
   }
 
   return (
