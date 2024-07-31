@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import GlobalFilters from "@/components/shared/search/GlobalFilters";
 import Spinner from "@/components/shared/Spinner";
+import { globalSearch } from "@/lib/actions/global.action";
 
 const renderLink = (type: string, id: string) => {
   switch (type) {
@@ -42,8 +43,8 @@ const GlobalResult = () => {
         setIsLoading(true);
 
         try {
-          // const res = await globalSearch({ query: global, type })
-          // setResult(JSON.parse(res));
+          const res = await globalSearch({ searchQuery: global, type });
+          setResult(JSON.parse(res));
         } catch (error) {
           console.error(error);
           throw error;
