@@ -2,6 +2,8 @@
 Welcome to Dev-Overflow, a community driven platform, where developers can ask and help to answers of programming doubts.
 
 ### Preview
+![Preview](https://github.com/user-attachments/assets/3d6fa84d-ae35-4b76-b145-22b132910a8a)
+
 
 ### Live Site
 To visit the live site, click [here](https://dev-overflow-gamma.vercel.app/).
