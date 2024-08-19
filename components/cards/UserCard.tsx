@@ -17,7 +17,7 @@ const UserCard: FunctionComponent<Props> = async ({ user }) => {
 
   return (
     user && (
-      <div className="shadow-light100_darknone w-full max-xs:min-w-full xs:w-[240px]">
+      <div className="shadow-light100_darknone w-full max-xs:min-w-full xs:w-[220px]">
         <article className="background-light900_dark200 light-border flex w-full flex-col items-center justify-center rounded-2xl border p-6">
           <Image
             src={user.picture}

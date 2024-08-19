@@ -11,10 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import Pagination from "@/components/shared/Pagination";
 import { Metadata } from "next";
 
-
 export const metadata: Metadata = {
-  title: "Tags"
-}
+  title: "Tags",
+};
+
 const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
   const { tags, isNext } = await getAllTags({
     searchQuery: searchParams?.q,
@@ -51,7 +51,7 @@ const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
       </div>
 
       {/* All Tags */}
-      <section className="mt-12 w-full grid grid-col-1 xs:grid-cols-2 lg:grid-cols-3 gap-3">
+      <section className="mt-12 w-full grid grid-col-1 xs:grid-cols-2 lg:grid-cols-3 gap-4">
         {tags.length > 0 ? (
           tags.map((tag: TagType) => (
             <Link
@@ -59,7 +59,7 @@ const page: FunctionComponent<SearchParamsProps> = async ({ searchParams }) => {
               key={tag._id}
               className="shadow-light100_darknone"
             >
-              <article className="background-light900_dark200 light-border flex w-full flex-col rounded-2xl border px-8 py-10 sm:w-[260px]">
+              <article className="background-light900_dark200 light-border flex w-full flex-col rounded-2xl border px-8 py-10 sm:w-[220px]">
                 <Badge className="subtle-medium background-light800_dark300 text-light400_light500 rounded-md border-none px-6 py-3 uppercase mx-auto text-white !text-[0.85rem]">
                   {tag.name}
                 </Badge>

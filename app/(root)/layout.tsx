@@ -7,10 +7,10 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: {
     template: "%s - DevOverflow",
-    default: "Home - DevOverflow"
+    default: "Home - DevOverflow",
   },
-  description: "DevOverflow - Community Website for Developers"
-}
+  description: "DevOverflow - Community Website for Developers",
+};
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
