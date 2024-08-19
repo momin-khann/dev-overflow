@@ -10,8 +10,8 @@ import { SearchParamsProps, UserType } from "@/types";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Community"
-}
+  title: "Community",
+};
 const page = async ({ searchParams }: SearchParamsProps) => {
   const { users } = await getAllUsers({
     searchQuery: searchParams?.q,
@@ -48,7 +48,7 @@ const page = async ({ searchParams }: SearchParamsProps) => {
       </div>
 
       {/* All Users */}
-      <section className="mt-12 w-full flex flex-between flex-wrap gap-4">
+      <section className="mt-12 w-full flex flex-between flex-wrap gap-3">
         {users?.length > 0 ? (
           users.map((user: UserType) => <UserCard key={user._id} user={user} />)
         ) : (

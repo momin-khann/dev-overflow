@@ -12,9 +12,7 @@ const LeftSidebar = () => {
   const { userId } = useAuth();
 
   return (
-    <section
-      className="background-light900_dark200 light-border custom-scrollbar sticky left-0 top-0 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-32 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
-
+    <section className="background-light900_dark200 light-border custom-scrollbar sticky left-0 top-0 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-32 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[250px]">
       {/* Rendering sidebar list */}
       <div className="flex flex-1 flex-col gap-2">
         {sidebarLinks.map((item) => {
@@ -23,11 +21,18 @@ const LeftSidebar = () => {
             pathname === item.route;
 
           // if route is profile then return with userId profile link
-          item.route = item.route === "/profile" && userId ? `/profile/${userId}` : item.route;
+          item.route =
+            item.route === "/profile" && userId
+              ? `/profile/${userId}`
+              : item.route;
 
           // if active so, change icon image
-          isActive && item.route === "/ask-ai" && (item.imgURL = "/assets/icons/stars-white.svg");
-          !isActive && item.route === "/ask-ai" && (item.imgURL = "/assets/icons/stars.svg");
+          isActive &&
+            item.route === "/ask-ai" &&
+            (item.imgURL = "/assets/icons/stars-white.svg");
+          !isActive &&
+            item.route === "/ask-ai" &&
+            (item.imgURL = "/assets/icons/stars.svg");
 
           return <SideLink key={item.label} item={item} isActive={isActive} />;
         })}
@@ -35,21 +40,20 @@ const LeftSidebar = () => {
         <hr />
 
         {comingSoon.map((item) => {
-          const isActive = pathname.includes(item.route) || pathname === item.route;
+          const isActive =
+            pathname.includes(item.route) || pathname === item.route;
 
           return <SideLink key={item.label} item={item} isActive={isActive} />;
         })}
-
       </div>
 
       {/* Bottom Auth Buttons */}
-      <AuthButtons />
+      {/*<AuthButtons />*/}
     </section>
   );
 };
 
 export default LeftSidebar;
-
 
 interface Props {
   item: {
@@ -78,15 +82,12 @@ const SideLink = ({ item, isActive }: Props) => {
         height={20}
         className={`${isActive ? "" : "invert-colors"}`}
       />
-      <p
-        className={`${isActive ? "base-bold" : "base-medium"} max-lg:hidden`}
-      >
+      <p className={`${isActive ? "base-bold" : "base-medium"} max-lg:hidden`}>
         {item.label}
       </p>
     </Link>
   );
 };
-
 
 const AuthButtons = () => {
   return (
@@ -101,15 +102,12 @@ const AuthButtons = () => {
               height={20}
               className="invert-colors lg:hidden"
             />
-            <span className="primary-text-gradient max-lg:hidden">
-                Log In
-              </span>
+            <span className="primary-text-gradient max-lg:hidden">Log In</span>
           </Button>
         </Link>
 
         <Link href={"/sign-up"}>
-          <Button
-            className="small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full rounded-lg border px-4 py-3 shadow-none">
+          <Button className="small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full rounded-lg border px-4 py-3 shadow-none">
             <Image
               src="/assets/icons/sign-up.svg"
               alt="sign up"
@@ -124,4 +122,3 @@ const AuthButtons = () => {
     </SignedOut>
   );
 };
-

@@ -7,11 +7,6 @@ export const metadata: Metadata = {
 };
 
 const AskAI = () => {
-  // ask ai
-
-  return (
-    // <main className="flex-1 flex flex-col">
-    <AskForm />
-  );
+  return <AskForm />;
 };
 export default AskAI;

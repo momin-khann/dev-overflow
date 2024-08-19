@@ -44,7 +44,7 @@ const Navbar = () => {
           </SignedIn>
         ) : (
           <Link href="/sign-in" className="flex justify-end max-sm:w-full">
-            <Button className="primary-gradient min-h-[46px] px-4 py-3 font-semibold !text-light-900">
+            <Button className="primary-gradient min-h-[46px] px-6 py-3 text-md font-semibold !text-light-900">
               Sign In
             </Button>
           </Link>
