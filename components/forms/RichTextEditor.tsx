@@ -5,7 +5,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import { useTheme } from "next-themes";
 import Spinner from "@/components/shared/Spinner";
 
-function RichTextEditor({ field, initialValue }: any, ref: any) {
+function RichTextEditor({ field, initialValue, setContent }: any, ref: any) {
   const { resolvedTheme: mode } = useTheme();
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +22,7 @@ function RichTextEditor({ field, initialValue }: any, ref: any) {
         initialValue={initialValue}
         onInit={(_evt, editor) => {
           // @ts-ignore
-          setLoading(false)
+          setLoading(false);
           ref.current = editor;
         }}
         init={{
@@ -31,7 +31,10 @@ function RichTextEditor({ field, initialValue }: any, ref: any) {
           ...richTextEditor.init,
         }}
         onBlur={field.onBlur}
-        onEditorChange={(content) => field.onChange(content)}
+        onEditorChange={(content) => {
+          field.onChange(content);
+          setContent(content);
+        }}
       />
     </>
   );

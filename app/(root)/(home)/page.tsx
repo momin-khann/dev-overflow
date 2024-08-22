@@ -17,6 +17,12 @@ export default async function Home({ searchParams }: SearchParamsProps) {
     page: searchParams?.page ? +searchParams.page : 1,
   });
 
+  const pageNo = searchParams.page;
+
+  const firstPagePagination =
+    (!pageNo || +pageNo == 1) && questions?.length > 6;
+  const remPagePagination = pageNo != null && +pageNo > 1;
+
   return (
     <main>
       {/*top header*/}
@@ -70,7 +76,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
         />
       )}
 
-      {questions?.length > 10 && (
+      {(firstPagePagination || remPagePagination) && (
         <Pagination
           pageNumber={searchParams?.page ? +searchParams.page : 1}
           isNext={isNext}

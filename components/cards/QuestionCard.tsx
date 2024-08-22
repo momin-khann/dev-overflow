@@ -6,6 +6,7 @@ import { getTimestamp } from "@/helpers/sanitizer";
 import { TagType, UserType } from "@/types";
 import { SignedIn } from "@clerk/nextjs";
 import EditDeleteButtons from "@/components/shared/EditDeleteButtons";
+import { v4 as uuidv4 } from "uuid";
 
 interface OwnProps {
   _id: string;
@@ -62,7 +63,7 @@ const QuestionCard: FunctionComponent<Props> = ({
 
       <div className="mt-5 flex flex-wrap gap-2">
         {tags.map((tag: TagType) => (
-          <RenderTag key={tag._id} _id={tag._id} name={tag.name} />
+          <RenderTag key={uuidv4()} _id={tag._id} name={tag.name} />
         ))}
       </div>
 
