@@ -3,6 +3,7 @@ import Navbar from "@/components/shared/navbar/Navbar";
 import LeftSidebar from "@/components/shared/sidebars/LeftSidebar";
 import RightSidebar from "@/components/shared/sidebars/RightSidebar";
 import { Metadata } from "next";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
   title: {
@@ -15,6 +16,12 @@ export const metadata: Metadata = {
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="background-light850_dark100 text-dark100_light900 relative min-h-screen">
+      <NextTopLoader
+        color="#FF7000"
+        height={2}
+        showSpinner={false}
+        easing="ease-in"
+      />
       <Navbar />
       <div className="flex">
         <LeftSidebar />

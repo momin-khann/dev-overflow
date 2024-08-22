@@ -4,16 +4,34 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useDebounce } from "@/hooks/useDebounce";
+import toast from "react-hot-toast";
+import ParseHTML from "@/components/shared/ParseHTML";
+import askAI from "@/helpers/askAI";
 
 const AskForm = () => {
-  const { debounceValue, setDebounceValue } = useDebounce("", 400);
   const [input, setInput] = useState("");
-  const [data, setData] = useState("");
+  const [aiAnswer, setAiAnswer] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleQuery(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    // setDebounceValue(event.target.value);
+
+    if (process.env.NEXT_PUBLIC_NODE_ENV !== "DEV") {
+      toast.error("This feature is for DEV Mode only");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const answer = await askAI(input);
+      setAiAnswer(answer);
+    } catch (error) {
+      console.error(error);
+      toast.error("Response error form Chat-GPT");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -43,13 +61,16 @@ const AskForm = () => {
 
         <Button
           type={"submit"}
+          disabled={isLoading}
           className="primary-gradient min-h-[46px] px-6 py-3 text-xl !text-light-900"
         >
-          Ask
+          {isLoading ? "Generating..." : "Ask"}
         </Button>
       </form>
 
-      {!data && <NoData />}
+      {!aiAnswer && <NoData />}
+
+      <ParseHTML content={aiAnswer} />
     </main>
   );
 };

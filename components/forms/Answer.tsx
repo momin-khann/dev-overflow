@@ -17,14 +17,20 @@ import { z } from "zod";
 import RichTextEditor from "@/components/forms/RichTextEditor";
 import { createAnswer } from "@/lib/actions/answer.action";
 import toast from "react-hot-toast";
+import askAI from "@/helpers/askAI";
+import { useAuth } from "@clerk/nextjs";
 
 interface Props {
   questionId: string;
   mongoUserId: string;
 }
+
 export default function Answer({ questionId, mongoUserId }: Props) {
+  const { userId } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingAI, setIsSubmittingAI] = useState(false);
   const editorRef = useRef(null);
+  const [editorContent, setEditorContent] = useState("");
   const form = useForm<z.infer<typeof answerSchema>>({
     resolver: zodResolver(answerSchema),
     defaultValues: {
@@ -61,7 +67,30 @@ export default function Answer({ questionId, mongoUserId }: Props) {
   }
 
   const enhanceAnswer = async () => {
-    // if (!authorId) return;
+    if (!userId) {
+      toast.error("Please Login First");
+      return;
+    }
+
+    try {
+      if (process.env.NEXT_PUBLIC_NODE_ENV !== "DEV") {
+        toast.error("This feature is for DEV Mode only");
+        return;
+      }
+
+      setIsSubmittingAI(true);
+      const aiAnswer = await askAI(editorContent);
+
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+        editor.setContent(aiAnswer);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Response Error from Chat-GPT");
+    } finally {
+      setIsSubmittingAI(false);
+    }
   };
 
   return (
@@ -74,6 +103,7 @@ export default function Answer({ questionId, mongoUserId }: Props) {
         <Button
           className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
           onClick={enhanceAnswer}
+          disabled={isSubmittingAI}
         >
           <Image
             src="/assets/icons/stars.svg"
@@ -82,7 +112,7 @@ export default function Answer({ questionId, mongoUserId }: Props) {
             height={12}
             className="object-contain"
           />
-          Enhance Your Answer
+          {isSubmittingAI ? "Enhancing..." : "Enhance Your Answer"}
         </Button>
       </div>
 
@@ -99,7 +129,11 @@ export default function Answer({ questionId, mongoUserId }: Props) {
             render={({ field }) => (
               <FormItem className={"flex w-full flex-col gap-3"}>
                 <FormControl className={"mt-6"}>
-                  <RichTextEditor ref={editorRef} field={field} />
+                  <RichTextEditor
+                    ref={editorRef}
+                    field={field}
+                    setContent={setEditorContent}
+                  />
                 </FormControl>
                 <FormMessage className={"text-red-500"} />
               </FormItem>
@@ -112,7 +146,7 @@ export default function Answer({ questionId, mongoUserId }: Props) {
             className={"primary-gradient w-fit !text-light-900"}
             disabled={isSubmitting}
           >
-            {isSubmitting ? <>Submitting</> : <>Submit Answer</>}
+            {isSubmitting ? "Submitting..." : "Submit Answer"}
           </Button>
         </form>
       </Form>
