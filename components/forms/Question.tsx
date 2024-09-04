@@ -30,13 +30,14 @@ interface Props {
 }
 
 const Question: FunctionComponent<Props> = ({
-                                              questionDetails,
-                                              mongoUserId,
-                                              type,
-                                            }) => {
+  questionDetails,
+  mongoUserId,
+  type,
+}) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef(null);
   const router = useRouter();
+  const [content, setContent] = useState("");
 
   const parsedQuestion = questionDetails ? JSON.parse(questionDetails) : "";
   const initialTags = parsedQuestion?.tags?.map((tag: any) => tag.name);
@@ -200,6 +201,7 @@ const Question: FunctionComponent<Props> = ({
                       ref={editorRef}
                       field={field}
                       initialValue={parsedQuestion?.description || ""}
+                      setContent={setContent}
                     />
                   </FormControl>
                   <FormDescription
