@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { TagType, UserType } from "@/types";
 import Image from "next/image";
 import { getTopInteractedTags } from "@/lib/actions/tags.action";
+import { v4 as uuidv4 } from "uuid";
 
 interface OwnProps {
   user: UserType;
@@ -43,7 +44,7 @@ const UserCard: FunctionComponent<Props> = async ({ user }) => {
             {interactedTags.length > 0 ? (
               <div className="flex items-center gap-2">
                 {interactedTags.map((tag: TagType) => (
-                  <RenderTag key={tag._id} _id={tag._id} name={tag.name} />
+                  <RenderTag key={uuidv4()} _id={tag._id} name={tag.name} />
                 ))}
               </div>
             ) : (
