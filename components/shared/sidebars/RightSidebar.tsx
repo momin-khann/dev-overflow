@@ -5,6 +5,7 @@ import RenderTag from "../RenderTag";
 import { getHotQuestions } from "@/lib/actions/question.action";
 import { QuestionType } from "@/types";
 import { getHotTags } from "@/lib/actions/tags.action";
+import { v4 as uuidv4 } from "uuid";
 
 const RightSidebar = async () => {
   const hotQuestions = await getHotQuestions();
@@ -40,7 +41,7 @@ const RightSidebar = async () => {
         <div className="mt-7 flex flex-col gap-4">
           {hotTags.map((tag: any) => (
             <RenderTag
-              key={tag._id}
+              key={uuidv4()}
               _id={tag._id}
               name={tag.name}
               totalQuestions={tag.totalQuestions}

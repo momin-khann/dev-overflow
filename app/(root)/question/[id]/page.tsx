@@ -10,6 +10,7 @@ import Answer from "@/components/forms/Answer";
 import { getMongoUser } from "@/helpers/getMongoUser";
 import AllAnswers from "@/components/shared/AllAnswers";
 import Votes from "@/components/shared/Votes";
+import { v4 as uuidv4 } from "uuid";
 
 interface OwnProps {
   params: { id: string };
@@ -98,7 +99,7 @@ const page: FunctionComponent<Props> = async ({ params, searchParams }) => {
       <div className="mt-8 flex flex-wrap gap-2">
         {question.tags.map((tag: any) => (
           <RenderTag
-            key={tag._id}
+            key={uuidv4()}
             _id={tag._id}
             name={tag.name}
             showCount={false}
